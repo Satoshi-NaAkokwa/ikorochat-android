@@ -96,14 +96,14 @@ class FeatureRuntime {
     private val _capabilityLog = MutableStateFlow<List<CapabilityLogEntry>>(emptyList())
     val capabilityLog: StateFlow<List<CapabilityLogEntry>> = _capabilityLog.asStateFlow()
     
-    ResourceMonitor().let { resourceMonitor ->
-        this.resourceMonitor = resourceMonitor
-    }
-    
-    lateinit var resourceMonitor: ResourceMonitor
-    
     private val secureRandom = SecureRandom()
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    lateinit var resourceMonitor: ResourceMonitor
+    
+    init {
+        resourceMonitor = ResourceMonitor()
+    }
     
     // Freeze state (emergency control)
     /**

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bitchat.android.features.openclaw.OpenClawService
 
@@ -28,10 +29,10 @@ import com.bitchat.android.features.openclaw.OpenClawService
 fun OpenClawSettingsSheet(
     viewModel: OpenClawViewModel = viewModel()
 ) {
-    val connectionState by viewModel.connectionState.collectAsState()
-    val errorState by viewModel.errorState.collectAsState()
-    val sessionInfo by viewModel.sessionInfo.collectAsState()
-    val connectionLog by viewModel.connectionLog.collectAsState()
+    val connectionState by viewModel.connectionState
+    val errorState by viewModel.errorState
+    val sessionInfo by viewModel.sessionInfo
+    val connectionLog by viewModel.connectionLog
     
     var showLogs by remember { mutableStateOf(false) }
     
@@ -333,7 +334,7 @@ class OpenClawViewModel : androidx.lifecycle.ViewModel() {
     private val _sessionInfo = mutableStateOf<String>("Not connected")
     val sessionInfo: androidx.compose.runtime.State<String> = _sessionInfo
     
-    private val _connectionLog = mutableStateListOf<LogEntry>()
+    private val _connectionLog = mutableStateOf<List<LogEntry>>(emptyList())
     val connectionLog: androidx.compose.runtime.State<List<LogEntry>> = _connectionLog
     
     fun revokeConnection() {
@@ -345,17 +346,15 @@ class OpenClawViewModel : androidx.lifecycle.ViewModel() {
     }
     
     fun clearLogs() {
-        _connectionLog.clear()
+        _connectionLog.value = emptyList()
         addLog("Logs cleared")
     }
     
     fun addLog(action: String) {
-        _connectionLog.add(
-            LogEntry(
-                id = java.util.UUID.randomUUID().toString(),
-                action = action,
-                timestamp = System.currentTimeMillis()
-            )
+        _connectionLog.value = _connectionLog.value + LogEntry(
+            id = java.util.UUID.randomUUID().toString(),
+            action = action,
+            timestamp = System.currentTimeMillis()
         )
     }
     
