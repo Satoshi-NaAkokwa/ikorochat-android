@@ -27,11 +27,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.bitchat.droid"
+        applicationId = "com.ikorochat.android"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 33
-        versionName = "1.7.2"
+        versionCode = 34
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
