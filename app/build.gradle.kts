@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ikorochat.android"
+    namespace = "com.bitchat.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
     
     // Signing configuration for release builds
