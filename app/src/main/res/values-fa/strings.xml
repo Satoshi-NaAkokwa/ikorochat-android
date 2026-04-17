@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- توضیح مجوزها -->
     <string name="permission_bluetooth_rationale">برای چت مستقیم با دیگران بدون اینترنت، به مجوز بلوتوث نیاز است.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">چرا بهینه‌سازی باتری را غیرفعال کنیم؟</string>
     <string name="battery_optimization_explanation">bitchat برای حفظ اتصال مِش با دستگاه‌های نزدیک در پس‌زمینه اجرا می‌شود. بهینه‌سازی باتری می‌تواند این اتصال‌ها را قطع کند و باعث تأخیر یا از دست رفتن پیام‌ها شود.\n\nغیرفعال‌کردن بهینه‌سازی باتری، ارتباط همتابه‌همتای قابل اعتماد را تضمین می‌کند.</string>
     <string name="battery_optimization_disable_button">غیرفعال‌کردن بهینه‌سازی باتری</string>
-    <string name="battery_optimization_note">توجه: می‌توانید بعداً در تنظیمات اندروید &gt; برنامه‌ها &gt; bitchat &gt; باتری این مورد را تغییر دهید.</string>
+    <string name="battery_optimization_note">توجه: می‌توانید بعداً در تنظیمات اندروید &gt; برنامه‌ها &gt; bitchatgt; Ikoro &gt; باتری این مورد را تغییر دهید.</string>
     <string name="battery_optimization_not_supported_explanation">دستگاه شما به تنظیمات بهینه‌سازی باتری نیاز ندارد. bitchat به‌صورت عادی اجرا می‌شود.</string>
     <string name="battery_optimization_not_supported_message">دستگاه شما به تنظیمات بهینه‌سازی باتری نیاز ندارد. bitchat به‌صورت عادی اجرا می‌شود.</string>
     <string name="battery_optimization_success_message">bitchat می‌تواند با اطمینان در پس‌زمینه اجرا شود</string>

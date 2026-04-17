@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Justificativas de permissões (BR) -->
     <string name="permission_bluetooth_rationale">A permissão de Bluetooth é necessária para conversar diretamente com outras pessoas sem internet.</string>
@@ -31,9 +31,9 @@
     <string name="battery_optimization_why_disable">Por que desativar a otimização de bateria?</string>
     <string name="battery_optimization_explanation">O bitchat roda em segundo plano para manter conexões mesh com dispositivos próximos. A otimização de bateria pode interromper essas conexões, fazendo com que mensagens atrasem ou se percam.\n\nDesativar a otimização de bateria garante comunicação P2P confiável.</string>
     <string name="battery_optimization_disable_button">Desativar otimização de bateria</string>
-    <string name="battery_optimization_note">Nota: Você pode alterar isso depois em Configurações do Android &gt; Apps &gt; bitchat &gt; Bateria.</string>
-    <string name="battery_optimization_not_supported_explanation">Seu dispositivo não requer ajustes de otimização de bateria. O bitchat funcionará normalmente.</string>
-    <string name="battery_optimization_not_supported_message">Seu dispositivo não requer ajustes de otimização de bateria. O bitchat funcionará normalmente.</string>
+    <string name="battery_optimization_note">Nota: Você pode alterar isso depois em Configurações do Android &gt; Apps &gt; bitchatgt; Ikoro &gt; Bateria.</string>
+    <string name="battery_optimization_not_supported_explanation">Seu dispositivo não requer ajustes de otimização de bateria. O Ikoro funcionará normalmente.</string>
+    <string name="battery_optimization_not_supported_message">Seu dispositivo não requer ajustes de otimização de bateria. O Ikoro funcionará normalmente.</string>
     <string name="battery_optimization_success_message">O bitchat pode operar de forma confiável em segundo plano</string>
     <string name="battery_optimization_benefits">• Entrega confiável de mensagens\n• Manutenção da conexão mesh\n• Encaminhamento em segundo plano\n• Evita quedas de conexão</string>
     <string name="battery_optimization_check_again">Verificar novamente</string>

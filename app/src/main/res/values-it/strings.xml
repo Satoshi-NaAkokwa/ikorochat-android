@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Spiegazioni dei permessi -->
     <string name="permission_bluetooth_rationale">Il permesso Bluetooth è necessario per la messaggistica peer-to-peer senza internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Perché disattivare l\'ottimizzazione della batteria?</string>
     <string name="battery_optimization_explanation">bitchat viene eseguito in background per mantenere le connessioni di rete mesh con i dispositivi vicini. L\'ottimizzazione della batteria può interrompere queste connessioni, causando ritardi o perdita di messaggi.\n\nDisattivare l\'ottimizzazione della batteria garantisce una messaggistica peer-to-peer affidabile.</string>
     <string name="battery_optimization_disable_button">Disattiva ottimizzazione batteria</string>
-    <string name="battery_optimization_note">Nota: puoi modificare questa impostazione in seguito in Impostazioni Android &gt; App &gt; bitchat &gt; Batteria</string>
+    <string name="battery_optimization_note">Nota: puoi modificare questa impostazione in seguito in Impostazioni Android &gt; App &gt; bitchatgt; Ikoro &gt; Batteria</string>
     <string name="battery_optimization_not_supported_explanation">Il tuo dispositivo non richiede impostazioni di ottimizzazione della batteria. bitchat funzionerà normalmente.</string>
     <string name="battery_optimization_not_supported_message">Il tuo dispositivo non richiede impostazioni di ottimizzazione della batteria. bitchat funzionerà normalmente.</string>
     <string name="battery_optimization_success_message">bitchat può funzionare in modo affidabile in background</string>
@@ -340,7 +340,7 @@
 
     <!-- Simboli e stringhe speciali -->
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="mention_suggestion_at">@%1$s</string>
     <string name="image_counter">%1$d / %2$d</string>

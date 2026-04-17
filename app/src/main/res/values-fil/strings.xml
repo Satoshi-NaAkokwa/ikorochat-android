@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Mga dahilan ng permiso -->
     <string name="permission_bluetooth_rationale">Kailangan ang permiso sa Bluetooth para sa direktang pag‑usap kahit walang internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Bakit i‑disable ang pag‑optimize?</string>
     <string name="battery_optimization_explanation">Tumatakbo ang bitchat sa background upang mapanatili ang mesh na koneksyon sa mga kalapit na device. Maaaring maputol ito ng pag‑optimize ng baterya na nagdudulot ng pagkaantala o pagkawala ng mensahe.\n\nAng pag‑disable nito ay tinitiyak ang maaasahang peer‑to‑peer na pagmemensahe.</string>
     <string name="battery_optimization_disable_button">I‑disable ang pag‑optimize</string>
-    <string name="battery_optimization_note">Tandaan: Maaari itong baguhin sa Android Settings &gt; Apps &gt; bitchat &gt; Battery</string>
+    <string name="battery_optimization_note">Tandaan: Maaari itong baguhin sa Android Settings &gt; Apps &gt; bitchatgt; Ikoro &gt; Battery</string>
     <string name="battery_optimization_not_supported_explanation">Hindi kailangan ng iyong device ng mga setting ng pag‑optimize ng baterya. Normal na gagana ang bitchat.</string>
     <string name="battery_optimization_not_supported_message">Hindi kailangan ng iyong device ng mga setting ng pag‑optimize ng baterya. Normal na gagana ang bitchat.</string>
     <string name="battery_optimization_success_message">Maaasahang tatakbo ang bitchat sa background</string>
@@ -280,7 +280,7 @@
     <string name="grant_permissions">Payagan</string>
     <string name="location_tracking_warning">HINDI sinusubaybayan ng bitchat ang lokasyon mo</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">TAO</string>
     <string name="nobody_around">walang tao sa paligid…</string>

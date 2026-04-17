@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Berechtigungsbegründungen -->
     <string name="permission_bluetooth_rationale">Die Bluetooth‑Berechtigung ist erforderlich, um ohne Internet direkt mit anderen zu chatten.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Warum Akku‑Optimierung deaktivieren?</string>
     <string name="battery_optimization_explanation">bitchat läuft im Hintergrund, um Mesh‑Verbindungen zu nahegelegenen Geräten aufrechtzuerhalten. Die Akku‑Optimierung kann diese Verbindungen unterbrechen, wodurch Nachrichten verspätet zugestellt werden oder verloren gehen.\n\nDas Deaktivieren der Akku‑Optimierung sorgt für eine zuverlässige Peer‑to‑Peer‑Kommunikation.</string>
     <string name="battery_optimization_disable_button">Akku‑Optimierung deaktivieren</string>
-    <string name="battery_optimization_note">Hinweis: Du kannst dies später unter Android‑Einstellungen &gt; Apps &gt; bitchat &gt; Akku ändern.</string>
+    <string name="battery_optimization_note">Hinweis: Du kannst dies später unter Android‑Einstellungen &gt; Apps &gt; bitchatgt; Ikoro &gt; Akku ändern.</string>
     <string name="battery_optimization_not_supported_explanation">Dein Gerät benötigt keine Akku‑Optimierungs­einstellungen. bitchat läuft normal.</string>
     <string name="battery_optimization_not_supported_message">Dein Gerät benötigt keine Akku‑Optimierungs­einstellungen. bitchat läuft normal.</string>
     <string name="battery_optimization_success_message">bitchat kann zuverlässig im Hintergrund laufen</string>

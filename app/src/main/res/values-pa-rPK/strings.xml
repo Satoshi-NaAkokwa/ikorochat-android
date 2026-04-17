@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- اجازت دی وجہ -->
     <string name="permission_bluetooth_rationale">انٹرنیٹ توں بغیر سیدھی چیٹ لئی بلوٹوتھ دی اجازت ضروری اے۔</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">بیٹری آپٹمائزیشن کیوں بند کریے؟</string>
     <string name="battery_optimization_explanation">bitchat پس منظر وچ چلدا اے تے نیڑے ڈیوائس نال میش کنکشن برقرار رکھدا اے۔ بیٹری آپٹمائزیشن ایہ کنکشناں نوں روک سکدی اے، جِنہ نال پیغام لیٹ یا غائب ہوسکدے نیں۔\n\nبیٹری آپٹمائزیشن بند کرن نال معتبر ہم رتبہ رابطہ یقینی ہوندا اے۔</string>
     <string name="battery_optimization_disable_button">بیٹری آپٹمائزیشن بند کرو</string>
-    <string name="battery_optimization_note">نوٹ: تُسی ایہ بعد وچ Android سیٹنگز &gt; ایپس &gt; bitchat &gt; بیٹری وچ بدَل سکدے او۔</string>
+    <string name="battery_optimization_note">نوٹ: تُسی ایہ بعد وچ Android سیٹنگز &gt; ایپس &gt; bitchatgt; Ikoro &gt; بیٹری وچ بدَل سکدے او۔</string>
     <string name="battery_optimization_not_supported_explanation">توانڈے ڈیوائس نوں بیٹری آپٹمائزیشن سیٹنگ دی لوڑ نئیں۔ bitchat عام طرح چلّو گا۔</string>
     <string name="battery_optimization_not_supported_message">توانڈے ڈیوائس نوں بیٹری آپٹمائزیشن سیٹنگ دی لوڑ نئیں۔ bitchat عام طرح چلّو گا۔</string>
     <string name="battery_optimization_success_message">bitchat پس منظر وچ قابلِ اعتماد چل سکدا اے</string>

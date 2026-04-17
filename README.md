@@ -1,18 +1,19 @@
 <p align="center">
-  
+    <img src="https://github.com/user-attachments/assets/188c42f8-d249-4a72-b27a-e2b4f10a00a8" alt="Ikoro Android Logo" width="480">
+</p>
 
 > [!WARNING]
 > This software has not received external security review and may contain vulnerabilities and may not necessarily meet its stated security goals. Do not use it for sensitive use cases, and do not rely on its security until it has been reviewed. Work in progress.
 
-# bitchat for Android
+# Ikoro for Android
 
-A secure, decentralized, peer-to-peer messaging app that works over Bluetooth mesh networks. No internet required for mesh chats, no servers, no phone numbers - just pure encrypted communication. Bitchat also supports geohash channels, which use an internet connection to connect you with others in your geographic area.
+A secure, decentralized, peer-to-peer messaging app that works over Bluetooth mesh networks. No internet required for mesh chats, no servers, no phone numbers - just pure encrypted communication. Ikoro also supports geohash channels, which use an internet connection to connect you with others in your geographic area.
 
-This is the **Android port** of the original [bitchat iOS app](https://github.com/jackjackbits/bitchat), maintaining 100% protocol compatibility for cross-platform communication.
+This is the **Android port** of the original Ikoro iOS app, maintaining 100% protocol compatibility for cross-platform communication.
 
-## Install bitchat
+## Install Ikoro
 
-You can download the latest version of bitchat for Android from the [GitHub Releases page](https://github.com/permissionlesstech/bitchat-android/releases).
+You can download the latest version of Ikoro for Android from the [GitHub Releases page](https://github.com/permissionlesstech/bitchat-android/releases).
 
 Or you can:
 
@@ -30,7 +31,7 @@ This project is released into the public domain. See the [LICENSE](LICENSE.md) f
 
 ## Features
 
-- **✅ Cross-Platform Compatible**: Full protocol compatibility with iOS bitchat
+- **✅ Cross-Platform Compatible**: Full protocol compatibility with iOS Ikoro
 - **✅ Decentralized Mesh Network**: Automatic peer discovery and multi-hop message relay over Bluetooth LE
 - **✅ End-to-End Encryption**: X25519 key exchange + AES-256-GCM for private messages
 - **✅ Channel-Based Chats**: Topic-based group messaging with optional password protection
@@ -278,7 +279,7 @@ The Android implementation maintains 100% binary protocol compatibility with iOS
 
 ## Cross-Platform Communication
 
-This Android port enables seamless communication with the original iOS bitchat app:
+This Android port enables seamless communication with the original iOS Ikoro app:
 
 - **iPhone ↔ Android**: Full bidirectional messaging
 - **Mixed Groups**: iOS and Android users in same channels
@@ -304,4 +305,4 @@ Contributions are welcome! Key areas for enhancement:
 - **Security Issues**: Email security concerns privately
 - **iOS Compatibility**: Cross-reference with [original iOS repo](https://github.com/jackjackbits/bitchat)
 
-For iOS-specific issues, please refer to the [original iOS bitchat repository](https://github.com/jackjackbits/bitchat).
+For iOS-specific issues, please refer to the [original iOS Ikoro repository](https://github.com/jackjackbits/bitchat).

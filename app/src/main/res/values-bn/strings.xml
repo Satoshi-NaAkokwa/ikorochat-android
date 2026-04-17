@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- অনুমতির যৌক্তিকতা -->
     <string name="permission_bluetooth_rationale">ইন্টারনেট ছাড়াই অন্যদের সাথে সরাসরি চ্যাট করার জন্য ব্লুটুথ অনুমতি প্রয়োজন।</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">কেন ব্যাটারি অপ্টিমাইজেশন নিষ্ক্রিয় করবেন?</string>
     <string name="battery_optimization_explanation">bitchat ব্যাকগ্রাউন্ডে চলে কাছাকাছি ডিভাইসগুলির সাথে মেশ সংযোগ বজায় রাখতে। ব্যাটারি অপ্টিমাইজেশন এই সংযোগগুলি বাধাগ্রস্ত করতে পারে, যার ফলে বার্তা বিলম্বিত বা হারিয়ে যেতে পারে।\n\nব্যাটারি অপ্টিমাইজেশন নিষ্ক্রিয় করা নির্ভরযোগ্য পিয়ার-টু-পিয়ার যোগাযোগ নিশ্চিত করে।</string>
     <string name="battery_optimization_disable_button">ব্যাটারি অপ্টিমাইজেশন নিষ্ক্রিয় করুন</string>
-    <string name="battery_optimization_note">নোট: আপনি পরে Android Settings &gt; Apps &gt; bitchat &gt; Battery এ এটি পরিবর্তন করতে পারেন।</string>
+    <string name="battery_optimization_note">নোট: আপনি পরে Android Settings &gt; Apps &gt; bitchatgt; Ikoro &gt; Battery এ এটি পরিবর্তন করতে পারেন।</string>
     <string name="battery_optimization_not_supported_explanation">আপনার ডিভাইসে ব্যাটারি অপ্টিমাইজেশন সেটিংসের প্রয়োজন নেই। bitchat স্বাভাবিকভাবে চলবে।</string>
     <string name="battery_optimization_not_supported_message">আপনার ডিভাইসে ব্যাটারি অপ্টিমাইজেশন সেটিংসের প্রয়োজন নেই। bitchat স্বাভাবিকভাবে চলবে।</string>
     <string name="battery_optimization_success_message">bitchat নির্ভরযোগ্যভাবে ব্যাকগ্রাউন্ডে চলতে পারে</string>

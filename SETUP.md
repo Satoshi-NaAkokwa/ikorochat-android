@@ -1,8 +1,8 @@
-# BitChat Android - Setup Guide
+# Ikoro Android - Setup Guide
 
 ## Project Overview
 
-**BitChat for Android** is a secure, decentralized, peer-to-peer messaging app that operates over Bluetooth mesh networks. It provides encrypted communication without requiring internet connectivity for local mesh chats.
+**Ikoro for Android** is a secure, decentralized, peer-to-peer messaging app that operates over Bluetooth mesh networks. It provides encrypted communication without requiring internet connectivity for local mesh chats.
 
 - **Package Name:** `com.bitchat.droid`
 - **Application ID:** `com.bitchat.droid`
@@ -15,7 +15,7 @@
 
 ## Key Features
 
-- ✅ **Cross-Platform Compatible:** 100% protocol compatible with iOS BitChat
+- ✅ **Cross-Platform Compatible:** 100% protocol compatible with iOS Ikoro
 - ✅ **Bluetooth Mesh Networking:** Automatic peer discovery and multi-hop message relay
 - ✅ **End-to-End Encryption:** Noise Protocol (X25519) + Ed25519 signatures
 - ✅ **Channel-Based Messaging:** Topic-based group chats with password protection
@@ -566,7 +566,7 @@ jobs:
 
 ## Additional Resources
 
-- **BitChat Protocol Docs:** `/docs/`
+- **Ikoro Protocol Docs:** `/docs/`
 - **iOS Version:** https://github.com/jackjackbits/bitchat
 - **Android Developer Docs:** https://developer.android.com
 - **Jetpack Compose:** https://developer.android.com/jetpack/compose

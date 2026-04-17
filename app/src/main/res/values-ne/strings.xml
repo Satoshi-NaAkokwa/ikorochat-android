@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- अनुमति कारणहरू -->
     <string name="permission_bluetooth_rationale">इन्टरनेट बिना प्रत्यक्ष कुराकानीका लागि ब्लुटुथ अनुमति आवश्यक हुन्छ।</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">ब्याट्री अनुकूलन किन बन्द गर्ने?</string>
     <string name="battery_optimization_explanation">bitchat पछाडिबाट चल्छ ताकि नजिकका यन्त्रहरूसँग मेष जडान कायम रहोस्। ब्याट्री अनुकूलनले यी जडान विच्छेद गराउन सक्छ, जसले सन्देश ढिलो वा हराउन सक्छ।\n\nअनुकूलन बन्द गर्दा भरपर्दो peer‑to‑peer सन्देश सुनिश्चित हुन्छ।</string>
     <string name="battery_optimization_disable_button">ब्याट्री अनुकूलन बन्द गर्नुहोस्</string>
-    <string name="battery_optimization_note">नोट: यो सेटिङ पछि Android सेटिङहरू &gt; Apps &gt; bitchat &gt; Battery मा परिवर्तन गर्न सकिन्छ।</string>
+    <string name="battery_optimization_note">नोट: यो सेटिङ पछि Android सेटिङहरू &gt; Apps &gt; bitchatgt; Ikoro &gt; Battery मा परिवर्तन गर्न सकिन्छ।</string>
     <string name="battery_optimization_not_supported_explanation">तपाईंको यन्त्रलाई ब्याट्री अनुकूलन सेटिङ आवश्यक छैन। bitchat सामान्य रूपमा चल्नेछ।</string>
     <string name="battery_optimization_not_supported_message">तपाईंको यन्त्रलाई ब्याट्री अनुकूलन सेटिङ आवश्यक छैन। bitchat सामान्य रूपमा चल्नेछ।</string>
     <string name="battery_optimization_success_message">bitchat पछाडिबाट भरपर्दो रूपमा चल्न सक्छ</string>
@@ -280,7 +280,7 @@
     <string name="grant_permissions">अनुमति दिनुहोस्</string>
     <string name="location_tracking_warning">bitchat ले तपाईंको स्थान पछ्याउँदैन</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">मानिसहरू</string>
     <string name="nobody_around">वरिपरि कोही छैन…</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Lý do quyền -->
     <string name="permission_bluetooth_rationale">Quyền Bluetooth là cần thiết để trò chuyện trực tiếp với những người khác mà không cần Internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Tại sao nên tắt tối ưu hóa pin?</string>
     <string name="battery_optimization_explanation">bitchat chạy nền để duy trì kết nối mesh với các thiết bị gần đó. Tối ưu hóa pin có thể làm gián đoạn các kết nối này, gây ra tin nhắn bị trễ hoặc mất.\n\nTắt tối ưu hóa pin đảm bảo liên lạc ngang hàng đáng tin cậy.</string>
     <string name="battery_optimization_disable_button">Tắt tối ưu hóa pin</string>
-    <string name="battery_optimization_note">Lưu ý: Bạn có thể thay đổi điều này sau trong Android Settings &gt; Apps &gt; bitchat &gt; Battery.</string>
+    <string name="battery_optimization_note">Lưu ý: Bạn có thể thay đổi điều này sau trong Android Settings &gt; Apps &gt; bitchatgt; Ikoro &gt; Battery.</string>
     <string name="battery_optimization_not_supported_explanation">Thiết bị của bạn không cần cài đặt tối ưu hóa pin. bitchat sẽ chạy bình thường.</string>
     <string name="battery_optimization_not_supported_message">Thiết bị của bạn không cần cài đặt tối ưu hóa pin. bitchat sẽ chạy bình thường.</string>
     <string name="battery_optimization_success_message">bitchat có thể chạy đáng tin cậy trong nền</string>

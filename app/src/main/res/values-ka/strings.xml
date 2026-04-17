@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- ნებართვების ახსნა -->
     <string name="permission_bluetooth_rationale">Bluetooth-ის ნებართვა საჭიროა, რომ ინტერნეტის გარეშე პირდაპირ ისაუბროთ სხვებთან.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">რატომ უნდა გამოირთოს ბატარეის ოპტიმიზაცია?</string>
     <string name="battery_optimization_explanation">bitchat მუშაობს ფონში, რათა ახლომდებარე მოწყობილობებთან mesh-კავშირები შეინარჩუნოს. ბატარეის ოპტიმიზაციამ შეიძლება დააწყვეტინოს ეს კავშირები, რის გამოც შეტყობინებები დაგვიანდეს ან დაიკარგოს.\n\nბატარეის ოპტიმიზაციის გამორთვა უზრუნველყოფს სანდო peer-to-peer კომუნიკაციას.</string>
     <string name="battery_optimization_disable_button">ბატარეის ოპტიმიზაციის გამორთვა</string>
-    <string name="battery_optimization_note">შენიშვნა: შეგიძლიათ შეცვალოთ მოგვიანებით Android-ის პარამეტრებში &gt; აპები &gt; bitchat &gt; ბატარეა.</string>
+    <string name="battery_optimization_note">შენიშვნა: შეგიძლიათ შეცვალოთ მოგვიანებით Android-ის პარამეტრებში &gt; აპები &gt; bitchatgt; Ikoro &gt; ბატარეა.</string>
     <string name="battery_optimization_not_supported_explanation">თქვენს მოწყობილობას ბატარეის ოპტიმიზაცია არ სჭირდება. bitchat ჩვეულებრივ იმუშავებს.</string>
     <string name="battery_optimization_not_supported_message">თქვენს მოწყობილობას ბატარეის ოპტიმიზაცია არ სჭირდება. bitchat ჩვეულებრივ იმუშავებს.</string>
     <string name="battery_optimization_success_message">bitchat შეძლებს სანდოდ იმუშაოს ფონში</string>

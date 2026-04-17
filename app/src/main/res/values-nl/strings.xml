@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Toestemmingsredenen -->
     <string name="permission_bluetooth_rationale">Bluetooth-toestemming is vereist voor peer-to-peer berichten zonder internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Waarom batterijoptimalisatie uitschakelen?</string>
     <string name="battery_optimization_explanation">bitchat draait op de achtergrond om meshnetwerkverbindingen met apparaten in de buurt te onderhouden. Batterijoptimalisatie kan deze verbindingen onderbreken, waardoor berichten vertraagd of gemist worden.\n\nHet uitschakelen van batterijoptimalisatie zorgt voor betrouwbare peer-to-peer communicatie.</string>
     <string name="battery_optimization_disable_button">Batterijoptimalisatie uitschakelen</string>
-    <string name="battery_optimization_note">Opmerking: U kunt deze instelling later wijzigen in Android-instellingen &gt; Apps &gt; bitchat &gt; Batterij</string>
+    <string name="battery_optimization_note">Opmerking: U kunt deze instelling later wijzigen in Android-instellingen &gt; Apps &gt; bitchatgt; Ikoro &gt; Batterij</string>
     <string name="battery_optimization_not_supported_explanation">Uw apparaat vereist geen batterijoptimalisatie-instellingen. bitchat zal normaal draaien.</string>
     <string name="battery_optimization_not_supported_message">Uw apparaat vereist geen batterijoptimalisatie-instellingen. bitchat zal normaal draaien.</string>
     <string name="battery_optimization_success_message">bitchat kan betrouwbaar op de achtergrond draaien</string>
@@ -340,7 +340,7 @@
 
     <!-- Symbolen &amp; speciale strings -->
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="mention_suggestion_at">@%1$s</string>
     <string name="image_counter">%1$d / %2$d</string>

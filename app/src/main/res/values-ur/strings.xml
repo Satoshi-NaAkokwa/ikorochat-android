@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- اجازات کی وضاحت -->
     <string name="permission_bluetooth_rationale">بلوٹوتھ کی اجازت انٹرنیٹ کے بغیر دوسروں سے براہ راست چیٹ کرنے کے لیے ضروری ہے۔</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">بیٹری کی اصلاح کیوں بند کریں؟</string>
     <string name="battery_optimization_explanation">bitchat قریبی آلات کے ساتھ میش کنیکشن برقرار رکھنے کے لیے پس منظر میں چلتا ہے۔ بیٹری کی اصلاح ان کنیکشنز کو خراب کر سکتی ہے، جس سے پیغامات دیر سے پہنچیں یا کھو جائیں۔\n\nبیٹری کی اصلاح بند کرنا قابل اعتماد پیئر‑ٹو‑پیئر کمیونیکیشن کو یقینی بناتا ہے۔</string>
     <string name="battery_optimization_disable_button">بیٹری کی اصلاح بند کریں</string>
-    <string name="battery_optimization_note">نوٹ: آپ بعد میں Android سیٹنگز &gt; ایپس &gt; bitchat &gt; بیٹری میں اسے تبدیل کر سکتے ہیں۔</string>
+    <string name="battery_optimization_note">نوٹ: آپ بعد میں Android سیٹنگز &gt; ایپس &gt; bitchatgt; Ikoro &gt; بیٹری میں اسے تبدیل کر سکتے ہیں۔</string>
     <string name="battery_optimization_not_supported_explanation">آپ کے آلے کو بیٹری کی اصلاح کی سیٹنگز کی ضرورت نہیں۔ bitchat عام طور پر چلے گا۔</string>
     <string name="battery_optimization_not_supported_message">آپ کے آلے کو بیٹری کی اصلاح کی سیٹنگز کی ضرورت نہیں۔ bitchat عام طور پر چلے گا۔</string>
     <string name="battery_optimization_success_message">bitchat پس منظر میں قابل اعتماد طور پر چل سکتا ہے</string>

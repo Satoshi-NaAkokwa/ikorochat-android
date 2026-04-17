@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
     <string name="permission_bluetooth_rationale">Требуется разрешение Bluetooth для общения p2p без интернета.</string>
     <string name="permission_location_rationale">Требуется доступ к геопозиции для поиска ближайших устройств по Bluetooth.</string>
     <string name="permission_notification_rationale">Требуется доступ к уведомлениям для оповещения о новых сообщениях.</string>
@@ -26,7 +26,7 @@
     <string name="battery_optimization_why_disable">Зачем отключать оптимизацию?</string>
     <string name="battery_optimization_explanation">bitchat работает в фоне для поддержания mesh‑подключений с ближайшими устройствами. Оптимизация батареи может их прервать, что ведёт к задержкам и потерям сообщений.\n\nОтключение гарантирует надёжный обмен p2p.</string>
     <string name="battery_optimization_disable_button">Отключить оптимизацию</string>
-    <string name="battery_optimization_note">Примечание: это можно изменить позже в Настройки Android &gt; Приложения &gt; bitchat &gt; Батарея</string>
+    <string name="battery_optimization_note">Примечание: это можно изменить позже в Настройки Android &gt; Приложения &gt; bitchatgt; Ikoro &gt; Батарея</string>
     <string name="battery_optimization_not_supported_explanation">На вашем устройстве не требуются настройки оптимизации. bitchat будет работать штатно.</string>
     <string name="battery_optimization_not_supported_message">На вашем устройстве не требуются настройки оптимизации. bitchat будет работать штатно.</string>
     <string name="battery_optimization_success_message">bitchat может надёжно работать в фоне</string>
@@ -264,7 +264,7 @@
     <string name="grant_permissions">Выдать разрешения</string>
     <string name="location_tracking_warning">bitchat НЕ отслеживает вашу геопозицию</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">ЛЮДИ</string>
     <string name="nobody_around">никого рядом…</string>

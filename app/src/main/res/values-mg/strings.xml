@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Fanazavana momba ny alalana -->
     <string name="permission_bluetooth_rationale">Ilaina ny alalana Bluetooth mba hifandraisan-davitra tsy misy Internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Nahoana no mijanona ny fanamafisana bateria?</string>
     <string name="battery_optimization_explanation">Mihazakazaka ao ambadika ny bitchat mba hitazona ny fifandraisana tambazotry mesh amin\'ny fitaovana akaiky. Ny fanamafisana bateria dia afaka manelingelina ireo fifandraisana ireo, ka mahatonga ny hafatra hataran-tara na very.\n\nNy fanajanona ny fanamafisana bateria dia miantoka ny fifandraisan-davitra azo itokisana.</string>
     <string name="battery_optimization_disable_button">Hajanona ny Fanamafisana Bateria</string>
-    <string name="battery_optimization_note">Fanamarihana: Azonao ovaina ato aoriana izany amin\'ny Toetry Android &gt; Apps &gt; bitchat &gt; Bateria</string>
+    <string name="battery_optimization_note">Fanamarihana: Azonao ovaina ato aoriana izany amin\'ny Toetry Android &gt; Apps &gt; bitchatgt; Ikoro &gt; Bateria</string>
     <string name="battery_optimization_not_supported_explanation">Ny fitaovanao dia tsy mila fametrahana fanamafisana bateria. Ny bitchat dia handeha ara-dalàna.</string>
     <string name="battery_optimization_not_supported_message">Ny fitaovanao dia tsy mila fametrahana fanamafisana bateria. Ny bitchat dia handeha ara-dalàna.</string>
     <string name="battery_optimization_success_message">Afaka mihazakazaka azo itokisana ao ambadika ny bitchat</string>
@@ -289,7 +289,7 @@
     <string name="grant_permissions">Omeo Alalana</string>
     <string name="location_tracking_warning">Ny bitchat dia TSY manaraka ny toerananao</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">OLONA</string>
     <string name="nobody_around">tsy misy olona manodidina...</string>

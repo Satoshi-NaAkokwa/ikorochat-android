@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- 权限说明 -->
     <string name="permission_bluetooth_rationale">需要蓝牙权限以在无网络时进行点对点聊天。</string>
@@ -29,9 +29,9 @@
     <string name="battery_optimization_not_required">无需电池优化</string>
     <string name="battery_optimization_checking">正在检查电池优化</string>
     <string name="battery_optimization_why_disable">为何禁用电池优化？</string>
-    <string name="battery_optimization_explanation">bitchat 在后台运行以保持与附近设备的 mesh 连接。电池优化可能中断连接，导致消息延迟或丢失。\n\n禁用可确保可靠的点对点消息。</string>
+    <string name="battery_optimization_explanation">Ikoro 在后台运行以保持与附近设备的 mesh 连接。电池优化可能中断连接，导致消息延迟或丢失。\n\n禁用可确保可靠的点对点消息。</string>
     <string name="battery_optimization_disable_button">禁用电池优化</string>
-    <string name="battery_optimization_note">备注：稍后可在 设置 &gt; 应用 &gt; bitchat &gt; 电池 中更改。</string>
+    <string name="battery_optimization_note">备注：稍后可在 设置 &gt; 应用 &gt; bitchatgt; Ikoro &gt; 电池 中更改。</string>
     <string name="battery_optimization_not_supported_explanation">你的设备不需要电池优化设置。bitchat 将正常运行。</string>
     <string name="battery_optimization_not_supported_message">你的设备不需要电池优化设置。bitchat 将正常运行。</string>
     <string name="battery_optimization_success_message">bitchat 可在后台可靠运行</string>
@@ -280,7 +280,7 @@
     <string name="grant_permissions">授予权限</string>
     <string name="location_tracking_warning">bitchat 不会跟踪你的位置</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">成员</string>
     <string name="nobody_around">附近无人…</string>

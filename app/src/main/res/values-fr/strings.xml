@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Raisons des autorisations -->
     <string name="permission_bluetooth_rationale">L’autorisation Bluetooth est requise pour discuter en pair à pair sans internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Pourquoi désactiver l’optimisation de la batterie ?</string>
     <string name="battery_optimization_explanation">bitchat s’exécute en arrière-plan pour maintenir des connexions mesh avec les appareils à proximité. L’optimisation de la batterie peut interrompre ces connexions, entraînant des retards ou des pertes de messages.\n\nLa désactiver garantit une messagerie pair à pair fiable.</string>
     <string name="battery_optimization_disable_button">Désactiver l’optimisation</string>
-    <string name="battery_optimization_note">Remarque : tu peux modifier ce réglage plus tard dans Paramètres Android &gt; Apps &gt; bitchat &gt; Batterie</string>
+    <string name="battery_optimization_note">Remarque : tu peux modifier ce réglage plus tard dans Paramètres Android &gt; Apps &gt; bitchatgt; Ikoro &gt; Batterie</string>
     <string name="battery_optimization_not_supported_explanation">Ton appareil n’a pas besoin de réglages d’optimisation de batterie. bitchat fonctionnera normalement.</string>
     <string name="battery_optimization_not_supported_message">Ton appareil n’a pas besoin de réglages d’optimisation de batterie. bitchat fonctionnera normalement.</string>
     <string name="battery_optimization_success_message">bitchat peut fonctionner de manière fiable en arrière‑plan</string>
@@ -258,7 +258,7 @@
     <string name="bluetooth_needs_bullets">• Découvrir les utilisateurs à proximité\n• Créer des connexions de réseau mesh\n• Envoyer et recevoir des messages\n• Fonctionner sans internet ni serveurs</string>
     <string name="enable_bluetooth">Activer Bluetooth</string>
     <string name="bluetooth_not_supported">Bluetooth non pris en charge</string>
-    <string name="bluetooth_unsupported_explanation">Cet appareil ne prend pas en charge Bluetooth Low Energy (BLE), requis pour le fonctionnement de bitchat.\n\nbitchat a besoin de BLE pour créer des réseaux mesh et communiquer sans internet avec les appareils à proximité.</string>
+    <string name="bluetooth_unsupported_explanation">Cet appareil ne prend pas en charge Bluetooth Low Energy (BLE), requis pour le fonctionnement d Ikoro.\n\nbitchat a besoin de BLE pour créer des réseaux mesh et communiquer sans internet avec les appareils à proximité.</string>
     <string name="checking_bluetooth_status">Vérification du statut Bluetooth…</string>
     <string name="battery_optimization_detected_title">optimisation de la batterie détectée</string>
     <string name="battery_optimization_enabled_title">Optimisation de la batterie activée</string>
@@ -281,7 +281,7 @@
     <string name="grant_permissions">Accorder les autorisations</string>
     <string name="location_tracking_warning">bitchat ne suit PAS ta position</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">PERSONNES</string>
     <string name="nobody_around">personne aux alentours…</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- Alasan izin -->
     <string name="permission_bluetooth_rationale">Izin Bluetooth diperlukan untuk chatting langsung dengan orang lain tanpa Internet.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">Mengapa menonaktifkan optimalisasi baterai?</string>
     <string name="battery_optimization_explanation">bitchat berjalan di latar belakang untuk mempertahankan koneksi mesh dengan perangkat terdekat. Optimalisasi baterai dapat mengganggu koneksi ini, menyebabkan pesan tertunda atau hilang.\n\nMenonaktifkan optimalisasi baterai memastikan komunikasi peer-to-peer yang andal.</string>
     <string name="battery_optimization_disable_button">Nonaktifkan optimalisasi baterai</string>
-    <string name="battery_optimization_note">Catatan: Anda dapat mengubahnya nanti di Pengaturan Android &gt; Aplikasi &gt; bitchat &gt; Baterai.</string>
+    <string name="battery_optimization_note">Catatan: Anda dapat mengubahnya nanti di Pengaturan Android &gt; Aplikasi &gt; bitchatgt; Ikoro &gt; Baterai.</string>
     <string name="battery_optimization_not_supported_explanation">Perangkat Anda tidak memerlukan pengaturan optimalisasi baterai. bitchat akan berjalan normal.</string>
     <string name="battery_optimization_not_supported_message">Perangkat Anda tidak memerlukan pengaturan optimalisasi baterai. bitchat akan berjalan normal.</string>
     <string name="battery_optimization_success_message">bitchat dapat berjalan andal di latar belakang</string>

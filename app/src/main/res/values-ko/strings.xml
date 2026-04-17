@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- 권한 안내 -->
     <string name="permission_bluetooth_rationale">인터넷 없이 다른 사람과 직접 채팅하려면 블루투스 권한이 필요합니다.</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">왜 배터리 최적화를 끄나요?</string>
     <string name="battery_optimization_explanation">bitchat은 근처 기기와의 메쉬 연결을 유지하기 위해 백그라운드에서 동작합니다. 배터리 최적화는 이러한 연결을 중단시켜 메시지가 지연되거나 손실될 수 있습니다.\n\n배터리 최적화를 끄면 신뢰할 수 있는 P2P 통신이 보장됩니다.</string>
     <string name="battery_optimization_disable_button">배터리 최적화 끄기</string>
-    <string name="battery_optimization_note">참고: 이후 Android 설정 &gt; 앱 &gt; bitchat &gt; 배터리에서 변경할 수 있습니다.</string>
+    <string name="battery_optimization_note">참고: 이후 Android 설정 &gt; 앱 &gt; bitchatgt; Ikoro &gt; 배터리에서 변경할 수 있습니다.</string>
     <string name="battery_optimization_not_supported_explanation">이 기기는 배터리 최적화 설정이 필요하지 않습니다. bitchat은 정상적으로 동작합니다.</string>
     <string name="battery_optimization_not_supported_message">이 기기는 배터리 최적화 설정이 필요하지 않습니다. bitchat은 정상적으로 동작합니다.</string>
     <string name="battery_optimization_success_message">bitchat이 백그라운드에서 안정적으로 실행됩니다</string>

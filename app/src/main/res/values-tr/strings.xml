@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
     <string name="permission_bluetooth_rationale">İnternetsiz eşler arası mesajlaşma için Bluetooth izni gerekir.</string>
     <string name="permission_location_rationale">Bluetooth ile yakın cihazları bulmak için konum izni gerekir.</string>
     <string name="permission_notification_rationale">Yeni mesajlarda bildirim gönderebilmek için izin gerekir.</string>
@@ -26,7 +26,7 @@
     <string name="battery_optimization_why_disable">Neden devre dışı bırakmalı?</string>
     <string name="battery_optimization_explanation">bitchat yakındaki cihazlarla mesh bağlantısını sürdürmek için arka planda çalışır. Pil optimizasyonu bu bağlantıları kesebilir ve mesajlar gecikebilir/ kaybolabilir.\n\nDevre dışı bırakmak güvenilir eşler arası mesajlaşmayı sağlar.</string>
     <string name="battery_optimization_disable_button">Optimizasyonu kapat</string>
-    <string name="battery_optimization_note">Not: Daha sonra Ayarlar &gt; Uygulamalar &gt; bitchat &gt; Pil üzerinden değiştirebilirsin.</string>
+    <string name="battery_optimization_note">Not: Daha sonra Ayarlar &gt; Uygulamalar &gt; bitchatgt; Ikoro &gt; Pil üzerinden değiştirebilirsin.</string>
     <string name="battery_optimization_not_supported_explanation">Cihazının pil optimizasyonu ayarlarına ihtiyacı yok. bitchat normal çalışır.</string>
     <string name="battery_optimization_not_supported_message">Cihazının pil optimizasyonu ayarlarına ihtiyacı yok. bitchat normal çalışır.</string>
     <string name="battery_optimization_success_message">bitchat arka planda güvenle çalışabilir</string>
@@ -264,7 +264,7 @@
     <string name="grant_permissions">İzin ver</string>
     <string name="location_tracking_warning">bitchat konumunu takip etmez</string>
     <string name="at_symbol">@</string>
-    <string name="app_brand">bitchat/</string>
+    <string name="app_brand">Ikoro/</string>
     <string name="channel_count_prefix"> · ⧉ </string>
     <string name="geohash_people_header">KİŞİLER</string>
     <string name="nobody_around">yakında kimse yok…</string>

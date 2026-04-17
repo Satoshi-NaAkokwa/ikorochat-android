@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">bitchat</string>
+    <string name="app_name">Ikoro</string>
 
     <!-- คำอธิบายสิทธิ์ -->
     <string name="permission_bluetooth_rationale">จำเป็นต้องมีสิทธิ์บลูทูธเพื่อแชทโดยตรงกับผู้อื่นโดยไม่ใช้อินเทอร์เน็ต</string>
@@ -31,7 +31,7 @@
     <string name="battery_optimization_why_disable">ทำไมต้องปิดการเพิ่มประสิทธิภาพแบตเตอรี่?</string>
     <string name="battery_optimization_explanation">bitchat ทำงานเบื้องหลังเพื่อคงการเชื่อมต่อแบบเมชกับอุปกรณ์ใกล้เคียง การเพิ่มประสิทธิภาพแบตเตอรี่อาจขัดจังหวะการเชื่อมต่อเหล่านี้ ทำให้ข้อความล่าช้าหรือสูญหาย\n\nการปิดการเพิ่มประสิทธิภาพแบตเตอรี่ช่วยให้การสื่อสารแบบเพียร์ทูเพียร์เชื่อถือได้</string>
     <string name="battery_optimization_disable_button">ปิดการเพิ่มประสิทธิภาพแบตเตอรี่</string>
-    <string name="battery_optimization_note">หมายเหตุ: คุณสามารถเปลี่ยนได้ภายหลังที่ การตั้งค่า Android &gt; แอป &gt; bitchat &gt; แบตเตอรี่</string>
+    <string name="battery_optimization_note">หมายเหตุ: คุณสามารถเปลี่ยนได้ภายหลังที่ การตั้งค่า Android &gt; แอป &gt; bitchatgt; Ikoro &gt; แบตเตอรี่</string>
     <string name="battery_optimization_not_supported_explanation">อุปกรณ์ของคุณไม่ต้องการการตั้งค่าการเพิ่มประสิทธิภาพแบตเตอรี่ bitchat จะทำงานตามปกติ</string>
     <string name="battery_optimization_not_supported_message">อุปกรณ์ของคุณไม่ต้องการการตั้งค่าการเพิ่มประสิทธิภาพแบตเตอรี่ bitchat จะทำงานตามปกติ</string>
     <string name="battery_optimization_success_message">bitchat สามารถทำงานเบื้องหลังได้อย่างเชื่อถือได้</string>
