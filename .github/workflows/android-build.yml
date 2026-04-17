@@ -95,7 +95,9 @@ jobs:
           ${{ runner.os }}-gradle-
 
     - name: Build ${{ matrix.variant }} APK
-      run: ./gradlew assemble${{ matrix.variant }}
+      run: ./gradlew assemble${{ matrix.variant }} --console=plain --no-daemon
+      env:
+        JAVA_OPTS: "-Xmx4g -XX:MaxMetaspaceSize=1g"
 
     - name: Upload ${{ matrix.variant }} APK
       uses: actions/upload-artifact@v4
