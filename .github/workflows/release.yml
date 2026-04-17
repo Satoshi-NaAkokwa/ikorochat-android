@@ -40,6 +40,8 @@ jobs:
 
       - name: Build Release APKs (with architecture splits)
         run: ./gradlew assembleRelease --no-daemon --stacktrace
+        env:
+          JAVA_OPTS: "-Xmx4g -XX:MaxMetaspaceSize=1g"
 
       - name: List APK files
         run: |
