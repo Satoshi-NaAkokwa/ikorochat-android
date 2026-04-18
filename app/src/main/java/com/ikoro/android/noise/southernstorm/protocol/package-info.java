@@ -4,4 +4,4 @@
  *
  * Reference: http://noiseprotocol.org
  */
-package com.bitchat.android.noise.southernstorm.protocol;
+package com.ikoro.android.noise.southernstorm.protocol;

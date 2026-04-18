@@ -6,7 +6,7 @@
  * Java port: Rhys Weatherley
  */
 
-package com.bitchat.android.noise.southernstorm.crypto;
+package com.ikoro.android.noise.southernstorm.crypto;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
