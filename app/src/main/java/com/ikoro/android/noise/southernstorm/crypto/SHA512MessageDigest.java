@@ -20,7 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.bitchat.android.noise.southernstorm.crypto;
+package com.ikoro.android.noise.southernstorm.crypto;
 
 import java.security.DigestException;
 import java.security.MessageDigest;
