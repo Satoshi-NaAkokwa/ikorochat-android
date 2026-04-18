@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+
+## [3.0.0] - 2026-04-18
+### ⚠️ Breaking Changes
+- **Complete Rebrand**: Package ID changed from `com.bitchat.droid` to `com.ikoro.droid`
+- **Namespace Update**: Changed from `com.bitchat.android` to `com.ikoro.android`
+- **Application Class**: Renamed `BitchatApplication` to `IkoroApplication`
+- **Class Renames**: All classes with "Bitchat" prefix renamed to "Ikoro" (e.g., `BitchatMessage` → `IkoroMessage`)
+- **Protocol Encoding**: Updated Nostr protocol prefix from `bitchat1:` to `ikoro1:`
+- **URI Scheme**: Changed deep link scheme from `ikoro://verify` (previously `bitchat://`)
+- **User Data Migration Required**: Users must uninstall v2.0.x before installing v3.0.0 (data will be lost)
+- **Notification Channels**: Updated channel IDs from `ikoro_*` format
+- **File Sharing Provider**: Now uses `${applicationId}.fileprovider` (automatic)
+
+### Changed
+- **Source Code**: 191 Kotlin files updated with new package structure
+- **Test Files**: 9 test files migrated to new package
+- **Resource Files**: All string resources updated (50+ languages)
+- **ProGuard Rules**: Updated to reflect new package structure
+- **Build Configuration**: Namespace and applicationId updated in build.gradle.kts
+- **Comments & Documentation**: All code comments updated to use "Ikoro" branding
+
+### Migration Notes
+- This is a **clean break** release with backward compatibility completely broken
+- Previous installation must be completely removed before installing v3.0.0
+- All chat history, contacts, and settings from v2.0.x will be lost
+- App is treated as a completely new application by the system
+- Consider v3.0.0 as a fresh start with complete rebranding to "Ikoro"
 ## [1.4.0] - 2025-10-15
 ### Fixed
 - fix: Resolve debug settings bottom sheet crash on some devices (Issue #472)
