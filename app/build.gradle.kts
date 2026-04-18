@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.bitchat.android"
+    namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
     
     // Signing configuration for release builds
@@ -27,11 +27,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.bitchat.droid"
+        applicationId = "com.ikoro.droid"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 36
-        versionName = "2.0.2"
+        versionName = "3.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
