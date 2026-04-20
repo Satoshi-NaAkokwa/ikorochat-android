@@ -1,9 +1,9 @@
-package com.bitchat.android.ui
+package com.ikoro.android.ui
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.bitchat.android.mesh.BluetoothMeshService
-import com.bitchat.android.model.BitchatMessage
+import com.ikoro.android.mesh.BluetoothMeshService
+import com.ikoro.android.model.BitchatMessage
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope

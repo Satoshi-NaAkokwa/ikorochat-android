@@ -27,8 +27,8 @@ import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.ShortBufferException;
 
-import com.bitchat.android.noise.southernstorm.crypto.GHASH;
-import com.bitchat.android.noise.southernstorm.crypto.RijndaelAES;
+import com.ikoro.android.noise.southernstorm.crypto.GHASH;
+import com.ikoro.android.noise.southernstorm.crypto.RijndaelAES;
 
 /**
  * Fallback implementation of "AESGCM" on platforms where

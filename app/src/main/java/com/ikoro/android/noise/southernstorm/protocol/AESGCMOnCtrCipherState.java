@@ -35,7 +35,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.bitchat.android.noise.southernstorm.crypto.GHASH;
+import com.ikoro.android.noise.southernstorm.crypto.GHASH;
 
 /**
  * Emulates the "AESGCM" cipher for Noise using the "AES/CTR/NoPadding"

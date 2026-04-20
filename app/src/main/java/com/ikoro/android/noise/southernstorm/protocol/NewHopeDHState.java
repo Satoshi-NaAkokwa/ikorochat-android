@@ -24,8 +24,8 @@ package com.ikoro.android.noise.southernstorm.protocol;
 
 import java.util.Arrays;
 
-import com.bitchat.android.noise.southernstorm.crypto.NewHope;
-import com.bitchat.android.noise.southernstorm.crypto.NewHopeTor;
+import com.ikoro.android.noise.southernstorm.crypto.NewHope;
+import com.ikoro.android.noise.southernstorm.crypto.NewHopeTor;
 
 /**
  * Implementation of the New Hope post-quantum algorithm for the Noise protocol.

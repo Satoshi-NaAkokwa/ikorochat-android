@@ -24,7 +24,7 @@ package com.ikoro.android.noise.southernstorm.protocol;
 
 import java.util.Arrays;
 
-import com.bitchat.android.noise.southernstorm.crypto.Curve25519;
+import com.ikoro.android.noise.southernstorm.crypto.Curve25519;
 
 /**
  * Implementation of the Curve25519 algorithm for the Noise protocol.

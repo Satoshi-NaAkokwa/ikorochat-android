@@ -29,10 +29,10 @@ import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 
-import com.bitchat.android.noise.southernstorm.crypto.Blake2bMessageDigest;
-import com.bitchat.android.noise.southernstorm.crypto.Blake2sMessageDigest;
-import com.bitchat.android.noise.southernstorm.crypto.SHA256MessageDigest;
-import com.bitchat.android.noise.southernstorm.crypto.SHA512MessageDigest;
+import com.ikoro.android.noise.southernstorm.crypto.Blake2bMessageDigest;
+import com.ikoro.android.noise.southernstorm.crypto.Blake2sMessageDigest;
+import com.ikoro.android.noise.southernstorm.crypto.SHA256MessageDigest;
+import com.ikoro.android.noise.southernstorm.crypto.SHA512MessageDigest;
 
 /**
  * Utility functions for the Noise protocol library.

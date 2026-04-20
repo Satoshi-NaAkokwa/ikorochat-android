@@ -24,7 +24,7 @@ package com.ikoro.android.noise.southernstorm.crypto;
 
 import java.util.Arrays;
 
-import com.bitchat.android.noise.southernstorm.protocol.Destroyable;
+import com.ikoro.android.noise.southernstorm.protocol.Destroyable;
 
 /**
  * Simple implementation of the Poly1305 message authenticator.

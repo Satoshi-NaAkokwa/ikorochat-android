@@ -1,8 +1,8 @@
-package com.bitchat.android.mesh
+package com.ikoro.android.mesh
 
-import com.bitchat.android.protocol.BitchatPacket
-import com.bitchat.android.protocol.MessageType
-import com.bitchat.android.model.FragmentPayload
+import com.ikoro.android.protocol.BitchatPacket
+import com.ikoro.android.protocol.MessageType
+import com.ikoro.android.model.FragmentPayload
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
