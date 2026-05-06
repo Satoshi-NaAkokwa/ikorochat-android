@@ -5,12 +5,14 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
+    kotlin("plugin.serialization") version "1.9.21"
 }
 
 android {
     namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
-    
+
     // Signing configuration for release builds
     val keystoreFile = file("keystore.properties")
     if (keystoreFile.exists()) {
@@ -112,18 +114,28 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
-    
+
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
-    
+
     // Lifecycle
     implementation(libs.bundles.lifecycle)
     implementation(libs.androidx.lifecycle.process)
-    
+
     // Navigation
     implementation(libs.androidx.navigation.compose)
-    
+
+    // Hilt Dependency Injection
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+
+    // Material Icons Extended
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
+    // Kotlin Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
     // Permissions
     implementation(libs.accompanist.permissions)
 
@@ -135,16 +147,16 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.compose)
-    
+
     // Cryptography
     implementation(libs.bundles.cryptography)
-    
+
     // JSON
     implementation(libs.gson)
-    
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
-    
+
     // Bluetooth
     implementation(libs.nordic.ble)
 
@@ -162,10 +174,10 @@ dependencies {
 
     // Security preferences
     implementation(libs.androidx.security.crypto)
-    
+
     // EXIF orientation handling for images
     implementation("androidx.exifinterface:exifinterface:1.3.7")
-    
+
     // Testing
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))

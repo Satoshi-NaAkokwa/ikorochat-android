@@ -38,6 +38,7 @@ import com.ikoro.android.onboarding.PermissionExplanationScreen
 import com.ikoro.android.onboarding.PermissionManager
 import com.ikoro.android.ui.ChatScreen
 import com.ikoro.android.ui.ChatViewModel
+import com.ikoro.android.ecommerce.ui.EcommerceNavigation
 import com.ikoro.android.ui.OrientationAwareActivity
 import com.ikoro.android.ui.theme.IkoroTheme
 import com.ikoro.android.nostr.PoWPreferenceManager
@@ -304,7 +305,11 @@ class MainActivity : OrientationAwareActivity() {
 
                 // Add the callback - this will be automatically removed when the activity is destroyed
                 onBackPressedDispatcher.addCallback(this, backCallback)
-                ChatScreen(viewModel = chatViewModel)
+                EcommerceNavigation(
+                    chatScreen = {
+                        ChatScreen(viewModel = chatViewModel)
+                    }
+                )
             }
             
             OnboardingState.ERROR -> {
