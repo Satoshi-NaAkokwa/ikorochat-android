@@ -1,4 +1,4 @@
-package com.ikoro.android.ecommerce.ui
+package com.ikoro.android.ecommerce.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,24 +13,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ikoro.android.ecommerce.model.Transaction
-import com.ikoro.android.ecommerce.model.Wallet
+import com.ikoro.android.ecommerce.data.model.Transaction
+import com.ikoro.android.ecommerce.data.model.Wallet
 import com.ikoro.android.ecommerce.viewmodel.WalletViewModel
 
 /**
- * Wallet Screen for ₿ Ọ F Ọ
- * Displays wallet balance and transactions
+ * Wallet Screen
+ * Displays wallet balance and transaction history
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen(
     onSendClick: () -> Unit,
     onReceiveClick: () -> Unit,
-    viewModel: WalletViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: WalletViewModel = hiltViewModel()
 ) {
     val wallets by viewModel.wallets.collectAsState()
     val selectedWallet by viewModel.selectedWallet.collectAsState()
@@ -75,7 +76,10 @@ fun WalletScreen(
                 WalletSelector(
                     wallets = wallets,
                     selectedWallet = selectedWallet,
-                    onWalletSelected = { viewModel.selectedWallet.value = it }
+                    onWalletSelected = { viewModel.selectWallet(it) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
             }
 
@@ -126,7 +130,7 @@ fun WalletScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                )
+                }
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -146,7 +150,7 @@ fun WalletScreen(
 fun BalanceCard(
     wallet: Wallet?,
     onReceiveClick: () -> Unit,
-    modifier: Modifier = Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier,
@@ -170,7 +174,8 @@ fun BalanceCard(
                 text = formatSatoshi(wallet?.balanceSatoshi ?: 0L),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(vertical = 8.dp)
             )
 
             Text(
@@ -252,6 +257,78 @@ fun WalletSelector(
 }
 
 @Composable
+fun ActionButtons(
+    onSendClick: () -> Unit,
+    onReceiveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        ActionButton(
+            icon = Icons.Default.Send,
+            label = "Send",
+            onClick = onSendClick,
+            modifier = Modifier.weight(1f)
+        )
+
+        ActionButton(
+            icon = Icons.Default.QrCode,
+            label = "Receive",
+            onClick = onReceiveClick,
+            modifier = Modifier.weight(1f)
+        )
+
+        ActionButton(
+            icon = Icons.Default.Receipt,
+            label = "History",
+            onClick = { /* Navigate to history */ },
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+fun ActionButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Card(
+            modifier = Modifier.size(64.dp),
+            shape = CircleShape,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            )
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = label,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+}
+
+@Composable
 fun TransactionItem(transaction: Transaction) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -303,7 +380,7 @@ fun TransactionItem(transaction: Transaction) {
                     Text(
                         text = formatTimestamp(transaction.createdAt),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.confusingly
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

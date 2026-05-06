@@ -1,54 +1,78 @@
 package com.ikoro.android.ecommerce.di
 
-import com.ikoro.android.ecommerce.network.OfoApiService
+import android.content.Context
+import androidx.room.Room
+import com.ikoro.android.ecommerce.data.database.OFODatabase
+import com.ikoro.android.ecommerce.data.database.Daos
+import com.ikoro.android.ecommerce.data.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-/**
- * Dependency Injection Module for ₿ Ọ F Ọ E-commerce
- */
 @Module
 @InstallIn(SingletonComponent::class)
 object EcommerceModule {
 
     @Provides
     @Singleton
-    fun provideJson(): Json {
-        return Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            encodeDefaults = false
-        }
-    }
-
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+    fun provideOFODatabase(@ApplicationContext context: Context): OFODatabase {
+        return Room.databaseBuilder(
+            context,
+            OFODatabase::class.java,
+            "ofo_database"
+        )
+            .fallbackToDestructiveMigration()
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideOfoApiService(
-        okHttpClient: OkHttpClient,
-        json: Json
-    ): OfoApiService {
-        return OfoApiService(okHttpClient, json)
+    fun provideProductDao(database: OFODatabase): Daos.ProductDao {
+        return database.productDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderDao(database: OFODatabase): Daos.OrderDao {
+        return database.orderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletDao(database: OFODatabase): Daos.WalletDao {
+        return database.walletDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionDao(database: OFODatabase): Daos.TransactionDao {
+        return database.transactionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(productDao: Daos.ProductDao): ProductRepository {
+        return ProductRepository(productDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderRepository(orderDao: Daos.OrderDao): OrderRepository {
+        return OrderRepository(orderDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletRepository(walletDao: Daos.WalletDao, transactionDao: Daos.TransactionDao): WalletRepository {
+        return WalletRepository(walletDao, transactionDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTransactionRepository(transactionDao: Daos.TransactionDao): TransactionRepository {
+        return TransactionRepository(transactionDao)
     }
 }
