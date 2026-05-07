@@ -45,6 +45,7 @@ import com.ikoro.android.ui.media.FileMessageItem
 import com.ikoro.android.model.IkoroMessageType
 import com.ikoro.android.R
 import androidx.compose.ui.res.stringResource
+import com.ikoro.android.ui.components.*
 
 
 // VoiceNotePlayer moved to com.ikoro.android.ui.media.VoiceNotePlayer
@@ -52,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 /**
  * Message display components for ChatScreen
  * Extracted from ChatScreen.kt for better organization
+ * Updated to use modern UX components: SwipeableMessage, MessageBubble, etc.
  */
 
 @Composable
@@ -516,4 +518,39 @@ fun DeliveryStatusIcon(status: DeliveryStatus) {
             )
         }
     }
+}
+
+/**
+ * Modern Message Item with Swipe Actions and Reactions
+ * This is the enhanced version of MessageItem that uses the new UX components
+ */
+@Composable
+fun ModernMessageItem(
+    message: IkoroMessage,
+    messages: List<IkoroMessage> = emptyList(),
+    currentUserNickname: String,
+    meshService: BluetoothMeshService,
+    reactions: List<MessageReaction> = emptyList(),
+    onReactionClick: (emoji: String) -> Unit = {},
+    onNicknameClick: ((String) -> Unit)? = null,
+    onMessageLongPress: ((IkoroMessage) -> Unit)? = null,
+    onCancelTransfer: ((IkoroMessage) -> Unit)? = null,
+    onImageClick: ((String, List<String>, Int) -> Unit)? = null,
+    onSwipeReply: () -> Unit = {},
+    onSwipeForward: () -> Unit = {},
+    onSwipeDelete: () -> Unit = {},
+    onSwipeStar: () -> Unit = {}
+) {
+    val isCurrentUser = message.sender == currentUserNickname
+
+    SwipeableMessage(
+        message = message,
+        isCurrentUser = isCurrentUser,
+        reactions = reactions,
+        onReactionClick = onReactionClick,
+        onSwipeReply = onSwipeReply,
+        onSwipeForward = onSwipeForward,
+        onSwipeDelete = onSwipeDelete,
+        onSwipeStar = onSwipeStar
+    )
 }

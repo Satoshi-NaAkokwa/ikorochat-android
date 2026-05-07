@@ -20,12 +20,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ikoro.android.model.IkoroMessage
 import com.ikoro.android.ui.media.FullScreenImageViewer
+import com.ikoro.android.ui.components.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddReaction
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.AutoAwesome
 
 /**
  * Main ChatScreen - REFACTORED to use component-based architecture
@@ -36,6 +43,11 @@ import com.ikoro.android.ui.media.FullScreenImageViewer
  * - SidebarComponents: Navigation drawer with channels and people
  * - AboutSheet: App info and password prompts
  * - ChatUIUtils: Utility functions for formatting and colors
+ * - MessageBubble: Modern message bubbles with reactions
+ * - SwipeableMessage: Swipe actions for messages
+ * - PullToRefresh: Pull-to-refresh gesture
+ * - BottomNav: Bottom navigation bar
+ * - ThemeToggle: Dark/light mode toggle
  */
 @Composable
 fun ChatScreen(viewModel: ChatViewModel) {
@@ -75,6 +87,19 @@ fun ChatScreen(viewModel: ChatViewModel) {
     var forceScrollToBottom by remember { mutableStateOf(false) }
     var isScrolledUp by remember { mutableStateOf(false) }
 
+    // Message reactions state
+    var messageReactions by remember { mutableStateOf(mapOf<String, List<MessageReaction>>()) }
+
+    // Pull-to-refresh state
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    // Bottom navigation state
+    var selectedNavItem by remember { mutableStateOf(BottomNavItem.Chat) }
+
+    // Show reaction picker
+    var showReactionPicker by remember { mutableStateOf(false) }
+    var selectedMessageForReaction by remember { mutableStateOf<IkoroMessage?>(null)
+
     // Show password dialog when needed
     LaunchedEffect(showPasswordPrompt) {
         showPasswordDialog = showPasswordPrompt
@@ -107,6 +132,17 @@ fun ChatScreen(viewModel: ChatViewModel) {
         else -> selectedLocationChannel !is com.ikoro.android.geohash.ChannelID.Location
     }
 
+    // Handle refresh action
+    val handleRefresh = {
+        isRefreshing = true
+        viewModel.refreshMessages()
+        // Simulate refresh completion
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+            kotlinx.coroutines.delay(1000)
+            isRefreshing = false
+        }
+    }
+
     // Use WindowInsets to handle keyboard properly
     Box(
         modifier = Modifier
@@ -114,7 +150,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
             .background(colorScheme.background) // Extend background to fill entire screen including status bar
     ) {
         val headerHeight = 42.dp
-        
+
         // Main content area that responds to keyboard/window insets
         Column(
             modifier = Modifier
@@ -130,58 +166,64 @@ fun ChatScreen(viewModel: ChatViewModel) {
             )
 
             // Messages area - takes up available space, will compress when keyboard appears
-            MessagesList(
-                messages = displayMessages,
-                currentUserNickname = nickname,
-                meshService = viewModel.meshService,
-                modifier = Modifier.weight(1f),
-                forceScrollToBottom = forceScrollToBottom,
-                onScrolledUpChanged = { isUp -> isScrolledUp = isUp },
-                onNicknameClick = { fullSenderName ->
-                    // Single click - mention user in text input
-                    val currentText = messageText.text
-                    
-                    // Extract base nickname and hash suffix from full sender name
-                    val (baseName, hashSuffix) = splitSuffix(fullSenderName)
-                    
-                    // Check if we're in a geohash channel to include hash suffix
-                    val selectedLocationChannel = viewModel.selectedLocationChannel.value
-                    val mentionText = if (selectedLocationChannel is com.ikoro.android.geohash.ChannelID.Location && hashSuffix.isNotEmpty()) {
-                        // In geohash chat - include the hash suffix from the full display name
-                        "@$baseName$hashSuffix"
-                    } else {
-                        // Regular chat - just the base nickname
-                        "@$baseName"
+            PullToRefreshLayout(
+                isRefreshing = isRefreshing,
+                onRefresh = handleRefresh,
+                modifier = Modifier.weight(1f)
+            ) {
+                MessagesList(
+                    messages = displayMessages,
+                    currentUserNickname = nickname,
+                    meshService = viewModel.meshService,
+                    modifier = Modifier.fillMaxSize(),
+                    forceScrollToBottom = forceScrollToBottom,
+                    onScrolledUpChanged = { isUp -> isScrolledUp = isUp },
+                    onNicknameClick = { fullSenderName ->
+                        // Single click - mention user in text input
+                        val currentText = messageText.text
+
+                        // Extract base nickname and hash suffix from full sender name
+                        val (baseName, hashSuffix) = splitSuffix(fullSenderName)
+
+                        // Check if we're in a geohash channel to include hash suffix
+                        val selectedLocationChannel = viewModel.selectedLocationChannel.value
+                        val mentionText = if (selectedLocationChannel is com.ikoro.android.geohash.ChannelID.Location && hashSuffix.isNotEmpty()) {
+                            // In geohash chat - include the hash suffix from the full display name
+                            "@$baseName$hashSuffix"
+                        } else {
+                            // Regular chat - just the base nickname
+                            "@$baseName"
+                        }
+
+                        val newText = when {
+                            currentText.isEmpty() -> "$mentionText "
+                            currentText.endsWith(" ") -> "$currentText$mentionText "
+                            else -> "$currentText $mentionText "
+                        }
+
+                        messageText = TextFieldValue(
+                            text = newText,
+                            selection = TextRange(newText.length)
+                        )
+                    },
+                    onMessageLongPress = { message ->
+                        // Message long press - open user action sheet with message context
+                        // Extract base nickname from message sender (contains all necessary info)
+                        val (baseName, _) = splitSuffix(message.sender)
+                        selectedUserForSheet = baseName
+                        selectedMessageForSheet = message
+                        showUserSheet = true
+                    },
+                    onCancelTransfer = { msg ->
+                        viewModel.cancelMediaSend(msg.id)
+                    },
+                    onImageClick = { currentPath, allImagePaths, initialIndex ->
+                        viewerImagePaths = allImagePaths
+                        initialViewerIndex = initialIndex
+                        showFullScreenImageViewer = true
                     }
-                    
-                    val newText = when {
-                        currentText.isEmpty() -> "$mentionText "
-                        currentText.endsWith(" ") -> "$currentText$mentionText "
-                        else -> "$currentText $mentionText "
-                    }
-                    
-                    messageText = TextFieldValue(
-                        text = newText,
-                        selection = TextRange(newText.length)
-                    )
-                },
-                onMessageLongPress = { message ->
-                    // Message long press - open user action sheet with message context
-                    // Extract base nickname from message sender (contains all necessary info)
-                    val (baseName, _) = splitSuffix(message.sender)
-                    selectedUserForSheet = baseName
-                    selectedMessageForSheet = message
-                    showUserSheet = true
-                },
-                onCancelTransfer = { msg ->
-                    viewModel.cancelMediaSend(msg.id)
-                },
-                onImageClick = { currentPath, allImagePaths, initialIndex ->
-                    viewerImagePaths = allImagePaths
-                    initialViewerIndex = initialIndex
-                    showFullScreenImageViewer = true
-                }
-            )
+                )
+            }
             // Input area - stays at bottom
         // Bridge file share from lower-level input to ViewModel
     androidx.compose.runtime.LaunchedEffect(Unit) {
@@ -238,6 +280,30 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 colorScheme = colorScheme,
                 showMediaButtons = showMediaButtons
             )
+
+            // Bottom Navigation Bar
+            BottomNavigationBar(
+                selectedItem = selectedNavItem,
+                onItemSelected = { item ->
+                    selectedNavItem = item
+                    // Handle navigation based on selected item
+                    when (item) {
+                        BottomNavItem.Chat -> {
+                            // Already on chat screen
+                        }
+                        BottomNavItem.Contacts -> {
+                            viewModel.showMeshPeerList()
+                        }
+                        BottomNavItem.Channels -> {
+                            showLocationChannelsSheet = true
+                        }
+                        BottomNavItem.Settings -> {
+                            viewModel.showAppInfo()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         // Floating header - positioned absolutely at top, ignores keyboard
@@ -254,6 +320,16 @@ fun ChatScreen(viewModel: ChatViewModel) {
             onLocationChannelsClick = { showLocationChannelsSheet = true },
             onLocationNotesClick = { showLocationNotesSheet = true }
         )
+
+        // Theme toggle button (floating, positioned at top right)
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 8.dp, end = 8.dp)
+                .zIndex(2f)
+        ) {
+            DarkModeToggle()
+        }
 
         // Divider under header - positioned after status bar + header height
         HorizontalDivider(
@@ -344,6 +420,31 @@ fun ChatScreen(viewModel: ChatViewModel) {
         showMeshPeerListSheet = showMeshPeerListSheet,
         onMeshPeerListDismiss = viewModel::hideMeshPeerList,
     )
+
+    // Reaction picker dialog
+    if (showReactionPicker && selectedMessageForReaction != null) {
+        ReactionPickerDialog(
+            message = selectedMessageForReaction!!,
+            currentReactions = messageReactions[selectedMessageForReaction!!.id] ?: emptyList(),
+            onReactionSelected = { emoji ->
+                val currentReactions = messageReactions[selectedMessageForReaction!!.id] ?: emptyList()
+                val updatedReactions = if (currentReactions.any { it.emoji == emoji }) {
+                    // Remove reaction
+                    currentReactions.filterNot { it.emoji == emoji }
+                } else {
+                    // Add reaction
+                    currentReactions + MessageReaction(emoji, 1, true)
+                }
+                messageReactions = messageReactions + (selectedMessageForReaction!!.id to updatedReactions)
+                showReactionPicker = false
+                selectedMessageForReaction = null
+            },
+            onDismiss = {
+                showReactionPicker = false
+                selectedMessageForReaction = null
+            }
+        )
+    }
 }
 
 @Composable
