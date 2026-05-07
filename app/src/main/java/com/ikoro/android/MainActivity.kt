@@ -38,7 +38,7 @@ import com.ikoro.android.onboarding.PermissionExplanationScreen
 import com.ikoro.android.onboarding.PermissionManager
 import com.ikoro.android.ui.ChatScreen
 import com.ikoro.android.ui.ChatViewModel
-import com.ikoro.android.ecommerce.ui.EcommerceNavigation
+import com.ikoro.android.ui.EcommerceNavigation
 import com.ikoro.android.ui.OrientationAwareActivity
 import com.ikoro.android.ui.theme.IkoroTheme
 import com.ikoro.android.nostr.PoWPreferenceManager

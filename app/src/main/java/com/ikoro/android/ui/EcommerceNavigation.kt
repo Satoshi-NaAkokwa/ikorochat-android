@@ -1,4 +1,4 @@
-package com.ikoro.android.ecommerce.ui
+package com.ikoro.android.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -14,11 +13,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ikoro.android.ecommerce.viewmodel.WalletViewModel
-import com.ikoro.android.ecommerce.viewmodel.OrderViewModel
+import com.ikoro.android.ui.screens.*
 
 /**
- * ₿ Ọ F Ọ E-commerce Navigation (Offline-First)
+ * ₿ Ọ F Ọ E-commerce Navigation (Simplified Offline-First)
  * Bottom navigation with Chat, Marketplace, Wallet, and Orders tabs
  * All features work 100% offline with mesh network support
  */
@@ -79,44 +77,17 @@ fun EcommerceNavigation(
 
             // Marketplace screen
             composable(EcommerceScreen.MARKETPLACE.route) {
-                ProductListScreen(
-                    onProductClick = { productId ->
-                        // Navigate to product detail (offline)
-                        navController.navigate("product/$productId")
-                    },
-                    viewModel = hiltViewModel()
-                )
+                MarketplaceScreen()
             }
 
             // Wallet screen
             composable(EcommerceScreen.WALLET.route) {
-                WalletScreen(
-                    onSendClick = { /* Show send dialog */ },
-                    onReceiveClick = { /* Show receive dialog */ },
-                    viewModel = hiltViewModel()
-                )
+                WalletScreen()
             }
 
             // Orders screen
             composable(EcommerceScreen.ORDERS.route) {
-                OrderScreen(
-                    onOrderClick = { orderId ->
-                        navController.navigate("order/$orderId")
-                    },
-                    viewModel = hiltViewModel()
-                )
-            }
-
-            // Product detail screen (placeholder)
-            composable("product/{productId}") { backStackEntry ->
-                val productId = backStackEntry.arguments?.getString("productId") ?: ""
-                // ProductDetailScreen(productId = productId)
-            }
-
-            // Order detail screen
-            composable("order/{orderId}") { backStackEntry ->
-                val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
-                // OrderDetailScreen(orderId = orderId, onBackClick = { navController.popBackStack() })
+                OrdersScreen()
             }
         }
     }
