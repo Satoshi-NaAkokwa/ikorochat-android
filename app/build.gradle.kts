@@ -166,6 +166,9 @@ dependencies {
     // EXIF orientation handling for images
     implementation("androidx.exifinterface:exifinterface:1.3.7")
 
+    // Audio messaging - using Android's built-in MediaRecorder/MediaPlayer with AAC encoding
+    // No additional dependencies needed - MediaRecorder.AudioEncoder.AAC is built into Android
+
     // Testing
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
