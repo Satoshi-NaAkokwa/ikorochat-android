@@ -1,308 +1,531 @@
-<p align="center">
-    <img src="https://github.com/user-attachments/assets/188c42f8-d249-4a72-b27a-e2b4f10a00a8" alt="Ikoro Android Logo" width="480">
-</p>
+# Ikoro Android - ₿ỌFỌ Platform
 
-> [!WARNING]
-> This software has not received external security review and may contain vulnerabilities and may not necessarily meet its stated security goals. Do not use it for sensitive use cases, and do not rely on its security until it has been reviewed. Work in progress.
+## Overview
 
-# Ikoro for Android
+Ikoro is a privacy-focused, offline-first messaging and e-commerce platform built for emerging markets. Powered by mesh networking technology, it enables communication, commerce, and emergency response without relying on internet connectivity.
 
-A secure, decentralized, peer-to-peer messaging app that works over Bluetooth mesh networks. No internet required for mesh chats, no servers, no phone numbers - just pure encrypted communication. Ikoro also supports geohash channels, which use an internet connection to connect you with others in your geographic area.
+### Key Features
 
-This is the **Android port** of the original Ikoro iOS app, maintaining 100% protocol compatibility for cross-platform communication.
+- **Peer-to-Peer Chat** - Encrypted messaging with mesh network support
+- **Marketplace** - Full e-commerce platform (10+ categories) with ₿ transactions
+- **Multimedia** - Image/video sharing, voice messages, media streaming
+- **Wallet** - ₿ and ₿ỌFỌ wallet with offline transaction queueing
+- **Orders** - Order tracking and management (100% offline view)
+- **AI Assistant (Agbara)** - Chat intelligence, recommendations, spending insights
+- **Emergency Mode** - SOS broadcasts, location sharing, offline first aid guides
+- **Creator Economy** - Music DAW, DJ mixer, VFX studio, AI creative tools
+- **Errand Logistics** - Request runners, track deliveries, ratings
+- **Security** - PIN/biometric auth, fraud detection, encrypted storage
 
-## Install Ikoro
+### Tech Stack
 
-You can download the latest version of Ikoro for Android from the [GitHub Releases page](https://github.com/permissionlesstech/bitchat-android/releases).
+- **Language**: Kotlin 100%
+- **UI Framework**: Jetpack Compose
+- **Database**: Room (SQLite)
+- **Networking**: OkHttp, Retrofit (when internet available)
+- **Image Loading**: Coil
+- **Dependency Injection**: Hilt
+- **Coroutines**: kotlinx.coroutines
+- **Async Stream**: Kotlin Flow
+- **Architecture**: MVVM + Clean Architecture
 
-Or you can:
+### Architecture
 
-[<img alt="Get it on Google Play" height="60" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"/>](https://play.google.com/store/apps/details?id=com.ikoro.droid)
+```
+┌─────────────────────────────────────────────┐
+│          Presentation Layer                 │
+│        (Jetpack Compose UI)                │
+│   Screens, ViewModels, Composeables       │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│           Domain Layer                      │
+│   (Business Logic, Use Cases, Models)     │
+│   Security, Encryption, Fraud Detection    │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│          Data Layer                         │
+│   Room Database, Mesh Sync, Cache         │
+│   Local Storage (Encrypted)               │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│         Network Layer                       │
+│   Mesh Network (无互联网Media)              │
+│   OkHttp (Internet Optional)              │
+└─────────────────────────────────────────────┘
+```
 
-**Instructions:**
+---
 
-1.  **Download the APK:** On your Android device, navigate to the link above and download the latest `.apk` file. Open it.
-2.  **Allow Unknown Sources:** On some devices, before you can install the APK, you may need to enable "Install from unknown sources" in your device's settings. This is typically found under **Settings > Security** or **Settings > Apps & notifications > Special app access**.
-3.  **Install:** Open the downloaded `.apk` file to begin the installation.
+## Project Structure
 
-## License
+```
+app/src/main/java/com/ikoro/android/
+├── ai/                          # AI Assistant (Agbara)
+│   ├── AgbaraAssistant.kt      # AI capability definitions
+│   └── services/               # AI services (chat intelligence, etc.)
+├── auth/                       # Authentication
+│   ├── BiometricAuth.kt        # Biometric authentication
+│   ├── PINManager.kt          # PIN management
+│   └── SecurityValidator.kt   # Security validation and fraud detection
+├── chat/                       # Chat functionality
+│   ├── ChatManager.kt        # Chat message handling
+│   ├── MeshMessaging.kt      # Mesh network messaging
+│   └── MultimediaHandler.kt  # Image/video/audio handling
+├── creator/                    # Creator economy
+│   ├── data/model/           # Music projects, DJ mixes, VFX models
+│   └── ui/screens/           # Creator Studio UI
+├── ecommerce/                 # E-commerce platform
+│   ├── data/model/           # Product, Order, Transaction models
+│   ├── data/model/ProductModels.kt  # Extended product (images, videos, seller)
+│   ├── data/model/CategoryModels.kt  # Specialized categories (healthcare, education, etc.)
+│   ├── ui/screens/            # Marketplace, Product Detail, Live Shopping
+│   └── ui/screens/categories/ # Category-specific screens
+│       ├── HealthcareScreen.kt
+│       ├── EducationScreen.kt
+│       ├── CategoryScreens.kt (Agriculture, RealEstate, Automotive, Fashion, Food, Services)
+├── emergency/                 # Emergency mode
+│   └── data/model/           # Emergency broadcasts, first aid guides
+├── mesh/                      # Mesh networking
+│   ├── MeshNode.kt           # Mesh peer discovery and management
+│   ├── MeshSync.kt           # Mesh synchronization
+│   └── MeshSecurity.kt       # Mesh encryption and reputation
+├── security/                  # Security and privacy
+│   └── data/model/           # Security settings, fraud detection, biometrics
+├── ui/                        # UI components
+│   ├── EcommerceNavigation.kt # Bottom navigation (7 tabs)
+│   └── screens/              # Shared UI screens
+│       ├── AgendaScreen.kt   # (Placeholder)
+│       ├── MarketplaceScreen.kt
+│       ├── MediaScreen.kt    # (Placeholder)
+│       ├── AgbaraAssistantScreen.kt
+│       ├── WalletScreen.kt
+│       ├── OrdersScreen.kt
+│       └── ErrandScreen.kt
+```
 
-This project is released into the public domain. See the [LICENSE](LICENSE.md) file for details.
+---
 
-## Features
-
-- **✅ Cross-Platform Compatible**: Full protocol compatibility with iOS Ikoro
-- **✅ Decentralized Mesh Network**: Automatic peer discovery and multi-hop message relay over Bluetooth LE
-- **✅ End-to-End Encryption**: X25519 key exchange + AES-256-GCM for private messages
-- **✅ Channel-Based Chats**: Topic-based group messaging with optional password protection
-- **✅ Store & Forward**: Messages cached for offline peers and delivered when they reconnect
-- **✅ Privacy First**: No accounts, no phone numbers, no persistent identifiers
-- **✅ IRC-Style Commands**: Familiar `/join`, `/msg`, `/who` style interface
-- **✅ Message Retention**: Optional channel-wide message saving controlled by channel owners
-- **✅ Emergency Wipe**: Triple-tap logo to instantly clear all data
-- **✅ Modern Android UI**: Jetpack Compose with Material Design 3
-- **✅ Dark/Light Themes**: Terminal-inspired aesthetic matching iOS version
-- **✅ Battery Optimization**: Adaptive scanning and power management
-
-## Android Setup
+## Development
 
 ### Prerequisites
 
-- **Android Studio**: Arctic Fox (2020.3.1) or newer
-- **Android SDK**: API level 26 (Android 8.0) or higher
-- **Kotlin**: 1.8.0 or newer
-- **Gradle**: 7.0 or newer
+- Android Studio Hedgehog (2023.1.1+) or IntelliJ IDEA
+- JDK 17
+- Android SDK API 24+ (Android 7.0+)
+- Gradle 8.0+
 
-### Build Instructions
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/permissionlesstech/bitchat-android.git
-   cd bitchat-android
-   ```
-
-2. **Open in Android Studio:**
-   ```bash
-   # Open Android Studio and select "Open an Existing Project"
-   # Navigate to the bitchat-android directory
-   ```
-
-3. **Build the project:**
-   ```bash
-   ./gradlew build
-   ```
-
-4. **Install on device:**
-   ```bash
-   ./gradlew installDebug
-   ```
-
-### Development Build
-
-For development builds with debugging enabled:
+### Building
 
 ```bash
+# Clone repository
+git clone <repository-url>
+cd ikorochat-android
+
+# Build debug APK
 ./gradlew assembleDebug
-adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# Build release APK
+./gradlew assembleRelease
+
+# Run unit tests
+./gradlew test
+
+# Run instrumented tests
+./gradlew connectedAndroidTest
+
+# Run Espresso tests
+./gradlew connectedDebugAndroidTest
 ```
 
-### Release Build
+### Releases
 
-For production releases:
+Release APKs include:
+- Code obfuscation (R8/ProGuard)
+- Optimized for size and startup
+- Removed debug features
+- Network security configuration
+
+To sign release APK:
 
 ```bash
-./gradlew assembleRelease
+./gradlew assembleRelease \
+  -Pandroid.injected.signing.store.file=$KEYSTORE_FILE \
+  -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
+  -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
+  -Pandroid.injected.signing.key.password=$KEY_PASSWORD
 ```
 
-## Android-Specific Requirements
+---
 
-### Permissions
+## User Guide
 
-The app requires the following permissions (automatically requested):
+### First Launch
 
-- **Bluetooth**: Core BLE functionality
-- **Location**: Required for BLE scanning on Android
-- **Network**: Expand your mesh through public internet relays
-- **Notifications**: Message alerts and background updates
+1. **Create Profile**: Enter name, optionally phone/email
+2. **Set PIN**: Choose 4-6 digit PIN (required for transactions)
+3. **Enable Biometric**: Optional (fingerprint/face)
+4. **Sync Mesh**: Auto-discovers nearby mesh nodes
+5. **Initialize Wallet**: Default 0 ₿ (can add via QR/transfer)
 
-### Hardware Requirements
+### Key Screens
 
-- **Bluetooth LE (BLE)**: Required for mesh networking
-- **Android 8.0+**: API level 26 minimum
-- **RAM**: 2GB recommended for optimal performance
+- **Chat Tab (`Chat` icon)**: Peer-to-peer encrypted messaging
+- **Marketplace Tab (`Storefront` icon)**: Browse and buy products (10 categories)
+- **Media Tab (`PhotoLibrary` icon)**: Share images, videos, audio
+- **AI Tab (`Psychology` icon)**: Agbara AI assistant (recommendations, insights)
+- **Wallet Tab (`AccountBalanceWallet` icon)**: ₿/₿ỌFỌ balance + transaction history
+- **Orders Tab (`ShoppingBasket` icon)**: Active and completed orders
+- **Errand Tab (`DeliveryDining` icon)**: Request errands + track deliveries
 
-## Usage
+### Making a Purchase
 
-### Basic Commands
+1. Go to Marketplace tab
+2. Select category (Healthcare, Education, Agriculture, etc.)
+3. View product details (images, videos, reviews, seller info)
+4. Tap "Buy Now" or "Add to Cart"
+5. Review order in checkout
+6. Confirm payment: Enter PIN/Biometric approval
+7. Order appears in Orders tab
+8. Track status (Pending → Processing → Delivered)
 
-- `/j #channel` - Join or create a channel
-- `/m @name message` - Send a private message
-- `/w` - List online users
-- `/channels` - Show all discovered channels
-- `/block @name` - Block a peer from messaging you
-- `/block` - List all blocked peers
-- `/unblock @name` - Unblock a peer
-- `/clear` - Clear chat messages
-- `/pass [password]` - Set/change channel password (owner only)
-- `/transfer @name` - Transfer channel ownership
-- `/save` - Toggle message retention for channel (owner only)
+### Payment Methods
 
-### Getting Started
+- **QR Code Scan**: Scan seller's QR code
+- **Payment Link': Click link from Chat/Email
+- **Near Field Communication (NFC)**: Tap to pay
+- **Wallet Balance**: Direct from ₿/₿ỌFỌ wallet
+- **Escrow**: For marketplace purchases, funds held until delivery confirmed
 
-1. **Install the app** on your Android device (requires Android 8.0+)
-2. **Grant permissions** for Bluetooth and location when prompted
-3. **Launch bitchat** - it will auto-start mesh networking
-4. **Set your nickname** or use the auto-generated one
-5. **Connect automatically** to nearby iOS and Android bitchat users
-6. **Join a channel** with `/j #general` or start chatting in public
-7. **Messages relay** through the mesh network to reach distant peers
+### Emergency Mode
 
-### Android UI Features
+**Quick Access**:
+- Shake phone (SOS shortcut setting optional)
+- Tap Emergency tab or home screen shortcut
+- Tap Red SOS button
 
-- **Jetpack Compose UI**: Modern Material Design 3 interface
-- **Dark/Light Themes**: Terminal-inspired aesthetic matching iOS
-- **Haptic Feedback**: Vibrations for interactions and notifications
-- **Adaptive Layout**: Optimized for various Android screen sizes
-- **Message Status**: Real-time delivery and read receipts
-- **RSSI Indicators**: Signal strength colors for each peer
+**Options**:
+- **Emergency Type**: Medical, Accident, Fire, Flood, Crime, etc.
+- **Location Sharing**: Auto-send via mesh network
+- **First Aid Guides**: Access offline guides (CPR, Bleeding, Burns, etc.)
+- **Help Response**: Responders nearby will see your broadcast and can respond
 
-### Channel Features
+### Privacy & Security
 
-- **Password Protection**: Channel owners can set passwords with `/pass`
-- **Message Retention**: Owners can enable mandatory message saving with `/save`
-- **@ Mentions**: Use `@nickname` to mention users (with autocomplete)
-- **Ownership Transfer**: Pass control to trusted users with `/transfer`
+- **PIN**: Required for transactions > 0.01 ₿
+- **Biometric**: Fingerprint/face available (backed by device)
+- **Mesh Encryption**: All messages encrypted end-to-end
+- **Fraud Detection**: Alerts for unusual patterns (new device, large transaction, unusual location)
+- **Two-Factor**: Optional SMS/Email/Offline code
+- **Anonymity Mode**: Hide online status and profile visibility
+- **Offline Wallet**: Private keys stored locally (never leave device)
 
-## Security & Privacy
+---
 
-### Encryption
-- **Private Messages**: X25519 key exchange + AES-256-GCM encryption
-- **Channel Messages**: Argon2id password derivation + AES-256-GCM
-- **Digital Signatures**: Ed25519 for message authenticity
-- **Forward Secrecy**: New key pairs generated each session
+## API Reference
 
-### Privacy Features
-- **No Registration**: No accounts, emails, or phone numbers required
-- **Ephemeral by Default**: Messages exist only in device memory
-- **Cover Traffic**: Random delays and dummy messages prevent traffic analysis
-- **Emergency Wipe**: Triple-tap logo to instantly clear all data
-- **Bundled Tor Support**: Built-in Tor network integration for enhanced privacy when internet connectivity is available
+### Core Models
 
-## Performance & Efficiency
+#### Product
 
-### Message Compression
-- **LZ4 Compression**: Automatic compression for messages >100 bytes
-- **30-70% bandwidth savings** on typical text messages
-- **Smart compression**: Skips already-compressed data
+```kotlin
+data class Product(
+    val id: String,
+    val name: String,
+    val description: String,
+    val category: String,
+    val price: Double,                  // in ₿
+    val sellerId: String,
+    val sellerName: String,
+    val images: List<String>,
+    val inStock: Boolean = true,
+    val createdAt: Long
+)
+```
 
-### Battery Optimization
-- **Adaptive Power Modes**: Automatically adjusts based on battery level
-  - Performance mode: Full features when charging or >60% battery
-  - Balanced mode: Default operation (30-60% battery)
-  - Power saver: Reduced scanning when <30% battery
-  - Ultra-low power: Emergency mode when <10% battery
-- **Background efficiency**: Automatic power saving when app backgrounded
-- **Configurable scanning**: Duty cycle adapts to battery state
+#### Order
 
-### Network Efficiency
-- **Optimized Bloom filters**: Faster duplicate detection with less memory
-- **Message aggregation**: Batches small messages to reduce transmissions
-- **Adaptive connection limits**: Adjusts peer connections based on power mode
+```kotlin
+data class Order(
+    val id: String,
+    val productId: String,
+    val buyerId: String,
+    val sellerId: String,
+    val quantity: Int,
+    val totalAmount: Double,            // in ₿
+    val status: OrderStatus,
+    val createdAt: Long,
+    val estimatedDelivery: Long? = null
+)
+```
 
-## Technical Architecture
+#### Transaction
 
-### Binary Protocol
-bitchat uses an efficient binary protocol optimized for Bluetooth LE:
-- Compact packet format with 1-byte type field
-- TTL-based message routing (max 7 hops)
-- Automatic fragmentation for large messages
-- Message deduplication via unique IDs
+```kotlin
+data class Transaction(
+    val id: String,
+    val fromUserId: String,
+    val toUserId: String,
+    val amount: Double,                 // in ₿
+    val currency: Currency,
+    val type: TransactionType,
+    val status: TransactionStatus,
+    val timestamp: Long,
+    val location: String? = null,
+    val metadata: String? = null
+)
+```
 
-### Mesh Networking
-- Each device acts as both client and peripheral
-- Automatic peer discovery and connection management
-- Store-and-forward for offline message delivery
-- Adaptive duty cycling for battery optimization
+#### Wallet
 
-### Android-Specific Optimizations
-- **Coroutine Architecture**: Asynchronous operations for mesh networking
-- **Kotlin Coroutines**: Thread-safe concurrent mesh operations
-- **EncryptedSharedPreferences**: Secure storage for user settings
-- **Lifecycle-Aware**: Proper handling of Android app lifecycle
-- **Battery Optimization**: Foreground service and adaptive scanning
+```kotlin
+data class Wallet(
+    val userId: String,
+    val balances: Map<Currency, Double>,  // ₿, ₦, ₿ỌFỌ
+    val transactions: List<Transaction> = emptyList(),
+    val lastSync: Long
+)
+```
 
-## Android Technical Architecture
+### Domain Services
 
-### Core Components
+#### ChatManager
 
-1. **BitchatApplication.kt**: Application-level initialization and dependency injection
-2. **MainActivity.kt**: Main activity handling permissions and UI hosting
-3. **ChatViewModel.kt**: MVVM pattern managing app state and business logic
-4. **BluetoothMeshService.kt**: Core BLE mesh networking (central + peripheral roles)
-5. **EncryptionService.kt**: Cryptographic operations using BouncyCastle
-6. **BinaryProtocol.kt**: Binary packet encoding/decoding matching iOS format
-7. **ChatScreen.kt**: Jetpack Compose UI with Material Design 3
+```kotlin
+class ChatManager {
+    suspend fun sendMessage(peerId: String, message: String, attachments: List<AttachmentMessage>? = null)
+    suspend fun receiveMessages(since: Long): List<ChatMessage>
+    suspend fun syncWithMesh(nodeId: String)
+}
 
-### Dependencies
+class MeshMessaging {
+    fun broadcastMessage(message: MeshMessage, proximity: Proximity)
+    fun receiveFromNearby(): Flow<IncomingMeshMessage>
+    fun signMessage(message: String): SignedMessage
+    fun verifySignature(message: SignedMessage): Boolean
+}
+```
 
-- **Jetpack Compose**: Modern declarative UI
-- **BouncyCastle**: Cryptographic operations (X25519, Ed25519, AES-GCM)
-- **Nordic BLE Library**: Reliable Bluetooth LE operations
-- **Kotlin Coroutines**: Asynchronous programming
-- **LZ4**: Message compression (when enabled)
-- **EncryptedSharedPreferences**: Secure local storage
+#### WalletManager
 
-### Binary Protocol Compatibility
+```kotlin
+class WalletManager {
+    suspend fun addFunds(amount: Double, currency: Currency)
+    suspend fun transfer(toUserId: String, amount: Double, currency: Currency)
+    suspend fun checkBalance(currency: Currency): Double
+    suspend fun getTransactionHistory(limit: Int = 50): List<Transaction>
+    suspend fun createTransaction(toUserId: String, amount: Double, currency: Currency, pin: String): TransactionResult
+}
+```
 
-The Android implementation maintains 100% binary protocol compatibility with iOS:
-- **Header Format**: Identical 13-byte header structure
-- **Packet Types**: Same message types and routing logic
-- **Encryption**: Identical cryptographic algorithms and key exchange
-- **UUIDs**: Same Bluetooth service and characteristic identifiers
-- **Fragmentation**: Compatible message fragmentation for large content
+#### OrderManager
 
-## Publishing to Google Play
+```kotlin
+class OrderManager {
+    suspend fun createOrder(productId: String, quantity: Int): Order
+    suspend fun updateOrderStatus(orderId: String, status: OrderStatus)
+    suspend fun getOrders(buyerId: String): List<Order>
+    suspend fun syncOrderStatus(orderId: String)
+}
+```
 
-### Preparation
+#### SecurityValidator
 
-1. **Update version information:**
-   ```kotlin
-   // In app/build.gradle.kts
-   defaultConfig {
-       versionCode = 2  // Increment for each release
-       versionName = "1.1.0"  // User-visible version
-   }
-   ```
+```kotlin
+class SecurityValidator {
+    fun validatePIN(enteredPIN: String): PINValidation
+    fun validateBiometric(): Boolean
+    fun detectFraud(transaction: Transaction): FraudDetectionResult
+    fun checkSecurityContext(deviceId: String): SecurityContext
+}
+```
 
-2. **Create a signed release build:**
-   ```bash
-   ./gradlew assembleRelease
-   ```
+#### EmergencyManager
 
-3. **Generate app bundle (recommended for Play Store):**
-   ```bash
-   ./gradlew bundleRelease
-   ```
+```kotlin
+class EmergencyManager {
+    suspend fun broadcastEmergency(type: EmergencyType, location: Location, message: String)
+    suspend fun getEmergenciesNearby(): Flow<EmergencyBroadcast>
+    fun getFirstAidGuide(category: FirstAidCategory): FirstAidGuide
+    fun checkFirstAidGuidesAvailable(): Boolean
+}
+```
 
-### Play Store Requirements
+---
 
-- **Target API**: Latest Android API (currently 34)
-- **Privacy Policy**: Required for apps requesting sensitive permissions
-- **App Permissions**: Justify Bluetooth and location usage
-- **Content Rating**: Complete questionnaire for age-appropriate content
+## Configuration
 
-### Distribution
+### App Configuration
 
-- **Google Play Store**: Main distribution channel
-- **F-Droid**: For open-source distribution
-- **Direct APK**: For testing and development
+Located in `app/src/main/res/values/strings.xml`
+- App name, currency symbols, network URLs
 
-## Cross-Platform Communication
+### Network Configuration
 
-This Android port enables seamless communication with the original iOS Ikoro app:
+Located in `app/src/main/res/xml/network_security_config.xml`
+- Pinning for server connections (when internet available)
+- Mesh port configuration
 
-- **iPhone ↔ Android**: Full bidirectional messaging
-- **Mixed Groups**: iOS and Android users in same channels
-- **Feature Parity**: All commands and encryption work across platforms
-- **Protocol Sync**: Identical message format and routing behavior
+### Security Configuration
 
-**iOS Version**: For iPhone/iPad users, get the original bitchat at [github.com/jackjackbits/bitchat](https://github.com/jackjackbits/bitchat)
+Located in `app/src/main/java/com/ikoro/android/security/data/model/SecurityModels.kt`
+- Default PIN length (4-6 digits)
+- Transaction limits (0.5 ₿)
+- Lockout timeout (5 minutes after 5 failed attempts)
+
+---
+
+## Performance Targets
+
+- **App cold start**: < 2s
+- **Marketplace load**: < 2s (100 products)
+- **Image load**: < 500ms (compressed)
+- **Wallet transaction**: < 500ms (pending)
+- **Chat message send**: < 300ms
+- **Memory idle**: < 150MB
+- **Memory max**: < 350MB
+- **Battery drain (active)**: < 5%/hr
+- **Battery drain (idle)**: < 1%/hr
+
+详见 PERFORMANCE.md for full optimization checklist。
+
+---
+
+## Testing
+
+参见 TESTING.md for comprehensive testing guidelines:
+- Unit tests (JUnit 5, MockK)
+- Integration tests (androidx.test)
+- UI tests (Espresso)
+- Performance benchmarks
+- Security tests
+- Offline/mesh tests
+
+Run all tests:
+```bash
+./gradlew test
+./gradlew connectedAndroidTest
+```
+
+---
 
 ## Contributing
 
-Contributions are welcome! Key areas for enhancement:
+### Code Style
 
-1. **Performance**: Battery optimization and connection reliability
-2. **UI/UX**: Additional Material Design 3 features
-3. **Security**: Enhanced cryptographic features
-4. **Testing**: Unit and integration test coverage
-5. **Documentation**: API documentation and development guides
+- Kotlin naming conventions (camelCase, PascalCase)
+- Jetpack Compose best practices
+- 2-space indentation (following Kotlin convention)
+- Comments for public APIs
+- KDoc for classes (> 10 lines)
 
-## Support & Issues
+### Git Conventional Commits
 
-- **Bug Reports**: [Create an issue](../../issues) with device info and logs
-- **Feature Requests**: [Start a discussion](https://github.com/orgs/permissionlesstech/discussions)
-- **Security Issues**: Email security concerns privately
-- **iOS Compatibility**: Cross-reference with [original iOS repo](https://github.com/jackjackbits/bitchat)
+```
+type(scope): description
 
-For iOS-specific issues, please refer to the [original iOS Ikoro repository](https://github.com/jackjackbits/bitchat).
+Types:
+- feat: New feature
+- fix: Bug fix
+- refactor: Code refactoring (no behavior change)
+- docs: Documentation
+- perf: Performance improvement
+- test: Adding tests
+- chore: Build/release tasks
+- style: Formatting (no logic change)
+
+Examples:
+feat(marketplace): Add healthcare category support
+fix(wallet): Transaction status update race condition
+perf(mesh): Reduce sync operator batch size
+docs(update): Add missing API reference
+```
+
+### Pull Request Requirements
+
+- [ ] Unit tests added/updated
+- [ ] Document changes in CHANGELOG.md
+- [ ] Screenshots for UI changes
+- [ ] Manual testing checklist marked
+- [ ] No breaking changes (or migration plan)
+
+---
+
+## Troubleshooting
+
+### App crashes after update
+- Wipe app data
+- Clear cache: `adb shell pm clear com.ikoro.android`
+- Report to support with logs
+
+### Mesh network not discovering peers
+- Verify Bluetooth/Wi-Fi Direct permissions
+- Check location permission (required for Bluetooth scanning)
+- Try toggling network off/on
+- Report with `adb logcat` output
+
+### Wallet balance incorrect
+- Sync with other wallets (tap "Refresh" in wallet)
+- Check for stuck pending transactions
+- Verify no sync errors in logs
+
+### Emergency SOS not sending
+- Verify ` manifestation Settings -> {Emergency SOS} -> Shake detection
+- Check location permission
+- Verify mesh nodes nearby
+- Try manual emergency tab broadcast
+
+---
+
+## License
+
+See LICENSE file.
+
+---
+
+## Support & Contributions
+
+- Discord: https://discord.com/invite/clawd
+- GitHub Issues: https://github.com/<repo>/issues
+- Email: support@ikoro.ng
+
+---
+
+## Roadmap
+
+### Next Releases
+
+**[v1.1]**
+- Live shopping audio/video streaming
+- Enhanced creator tools (AI music generation)
+- Multi-currency escrow
+- Collectible digital assets marketplace
+
+**[v1.2]**
+- Marketplace analytics for sellers
+- Enhanced AI assistant (voice)
+- Community forum/marketplace
+- Secure decentralized escrow integration
+
+**[v2.0]**
+- Cross-platform (iOS, Web)
+- Beta marketplace API for third-party integrations
+- Advanced anomaly detection for fraud
+- Mesh-of-meshes (relay assistants)
+
+---
+
+## Credits
+
+- Core Platform: Ikoro Team
+- Mesh Network: TimeScape Foundation
+- Design: Creative Commons Nigeria
+- Contributors: Open Source Community
+
+---
+
+**Version: 1.0.0-alpha**  
+**Last Updated: May 2026**  
+**Build: 2cb8422+ (commits after base)**
