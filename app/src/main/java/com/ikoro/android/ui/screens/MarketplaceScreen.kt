@@ -13,40 +13,44 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MarketplaceScreen() {
+fun MarketplaceScreen(modifier: Modifier = Modifier) {
     var searchQuery by remember { mutableStateOf("") }
 
     val products = remember {
         listOf(
-            Product("P001", "Organic Coffee Beans", "Premium Arabica coffee beans from Ethiopia", 0.05, "Food", "₿0.05"),
-            Product("P002", "Handmade Leather Wallet", "Handcrafted leather wallet with RFID blocking", 0.02, "Accessories", "₿0.02"),
-            Product("P003", "Smart Watch", "Fitness tracker with heart rate monitor", 0.15, "Electronics", "₿0.15"),
-            Product("P004", "Wireless Earbuds", "Noise-canceling Bluetooth earbuds", 0.08, "Electronics", "₿0.08"),
-            Product("P005", "Eco-Friendly Tote Bag", "Reusable cotton tote bag", 0.005, "Accessories", "₿0.005"),
+            ProductItem("P001", "Organic Coffee Beans", "Premium Arabica coffee beans from Ethiopia", 0.05, "Food", "₿0.05"),
+            ProductItem("P002", "Handmade Leather Wallet", "Handcrafted leather wallet with RFID blocking", 0.02, "Accessories", "₿0.02"),
+            ProductItem("P003", "Smart Watch", "Fitness tracker with heart rate monitor", 0.15, "Electronics", "₿0.15"),
+            ProductItem("P004", "Wireless Earbuds", "Noise-canceling Bluetooth earbuds", 0.08, "Electronics", "₿0.08"),
+            ProductItem("P005", "Eco-Friendly Tote Bag", "Reusable cotton tote bag", 0.005, "Accessories", "₿0.005"),
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Marketplace") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        TopAppBar(
+            title = { Text("Marketplace") },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
-        }
-    ) { paddingValues ->
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            SearchBar(
-                query = searchQuery,
-                onQueryChange = { searchQuery = it },
-                modifier = Modifier.fillMaxWidth()
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search products...") },
+                leadingIcon = {
+                    Icon(Icons.Default.Search, contentDescription = null)
+                },
+                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -63,7 +67,7 @@ fun MarketplaceScreen() {
 }
 
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: ProductItem) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -94,7 +98,7 @@ fun ProductCard(product: Product) {
                     label = { Text(product.category) }
                 )
                 Text(
-                    text = product.priceBtc,
+                    text = product.priceDisplay,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -103,7 +107,7 @@ fun ProductCard(product: Product) {
     }
 }
 
-data class Product(
+data class ProductItem(
     val id: String,
     val title: String,
     val description: String,
@@ -111,21 +115,3 @@ data class Product(
     val category: String,
     val priceDisplay: String
 )
-
-@Composable
-fun SearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        modifier = modifier,
-        placeholder = { Text("Search products...") },
-        leadingIcon = {
-            Icon(Icons.Default.Search, contentDescription = null)
-        },
-        singleLine = true
-    )
-}

@@ -6,88 +6,69 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.ikoro.android.ui.screens.*
 
 /**
- * ₿ Ọ F Ọ E-commerce Navigation (Simplified Offline-First)
+ * ₿ Ọ F Ọ E-commerce UI (Simplified Offline-First)
  * Bottom navigation with Chat, Marketplace, Wallet, and Orders tabs
  * All features work 100% offline with mesh network support
  */
-enum class EcommerceScreen(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
-    CHAT("chat", "Chat", Icons.Default.Chat),
-    MARKETPLACE("marketplace", "Marketplace", Icons.Default.Storefront),
-    WALLET("wallet", "Wallet", Icons.Default.AccountBalanceWallet),
-    ORDERS("orders", "Orders", Icons.Default.ReceiptLong)
+enum class EcommerceTab {
+    CHAT,
+    MARKETPLACE,
+    WALLET,
+    ORDERS
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EcommerceNavigation(
     chatScreen: @Composable () -> Unit,
-    navController: NavController = rememberNavController()
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    var selectedTab by remember { mutableStateOf(EcommerceTab.CHAT) }
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                EcommerceScreen.values().forEach { screen ->
-                    NavigationBarItem(
-                        selected = currentDestination?.route == screen.route,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = screen.icon,
-                                contentDescription = screen.label
-                            )
-                        },
-                        label = {
-                            Text(screen.label)
-                        }
-                    )
-                }
+                NavigationBarItem(
+                    selected = selectedTab == EcommerceTab.CHAT,
+                    onClick = { selectedTab = EcommerceTab.CHAT },
+                    icon = { Icon(Icons.Default.Chat, contentDescription = null) },
+                    label = { Text("Chat") }
+                )
+                NavigationBarItem(
+                    selected = selectedTab == EcommerceTab.MARKETPLACE,
+                    onClick = { selectedTab = EcommerceTab.MARKETPLACE },
+                    icon = { Icon(Icons.Default.ShoppingCart, contentDescription = null) },
+                    label = { Text("Marketplace") }
+                )
+                NavigationBarItem(
+                    selected = selectedTab == EcommerceTab.WALLET,
+                    onClick = { selectedTab = EcommerceTab.WALLET },
+                    icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null) },
+                    label = { Text("Wallet") }
+                )
+                NavigationBarItem(
+                    selected = selectedTab == EcommerceTab.ORDERS,
+                    onClick = { selectedTab = EcommerceTab.ORDERS },
+                    icon = { Icon(Icons.Default.ReceiptLong, contentDescription = null) },
+                    label = { Text("Orders") }
+                )
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = EcommerceScreen.CHAT.route,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            // Chat screen (existing Ikoro mesh messaging)
-            composable(EcommerceScreen.CHAT.route) {
-                chatScreen()
+        when (selectedTab) {
+            EcommerceTab.CHAT -> {
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    chatScreen()
+                }
             }
-
-            // Marketplace screen
-            composable(EcommerceScreen.MARKETPLACE.route) {
-                MarketplaceScreen()
+            EcommerceTab.MARKETPLACE -> {
+                com.ikoro.android.ui.screens.MarketplaceScreen(modifier = Modifier.padding(innerPadding))
             }
-
-            // Wallet screen
-            composable(EcommerceScreen.WALLET.route) {
-                WalletScreen()
+            EcommerceTab.WALLET -> {
+                com.ikoro.android.ui.screens.WalletScreen(modifier = Modifier.padding(innerPadding))
             }
-
-            // Orders screen
-            composable(EcommerceScreen.ORDERS.route) {
-                OrdersScreen()
+            EcommerceTab.ORDERS -> {
+                com.ikoro.android.ui.screens.OrdersScreen(modifier = Modifier.padding(innerPadding))
             }
         }
     }

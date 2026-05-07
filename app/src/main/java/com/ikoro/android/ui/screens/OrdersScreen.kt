@@ -13,30 +13,29 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrdersScreen() {
+fun OrdersScreen(modifier: Modifier = Modifier) {
     val orders = remember {
         listOf(
-            Order("O001", "Organic Coffee Beans", "Processing", 1715097600000, 0.05),
-            Order("O002", "Handmade Leather Wallet", "Shipped", 1715184000000, 0.02),
-            Order("O003", "Smart Watch", "Completed", 1715270400000, 0.15),
+            OrderItem("O001", "Organic Coffee Beans", "Processing", 1715097600000, 0.05),
+            OrderItem("O002", "Handmade Leather Wallet", "Shipped", 1715184000000, 0.02),
+            OrderItem("O003", "Smart Watch", "Completed", 1715270400000, 0.15),
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Orders") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        TopAppBar(
+            title = { Text("Orders") },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
-        }
-    ) { paddingValues ->
+        )
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -48,7 +47,7 @@ fun OrdersScreen() {
 }
 
 @Composable
-fun OrderCard(order: Order) {
+fun OrderCard(order: OrderItem) {
     val (status, statusColor) = when (order.status) {
         "Processing" -> "Processing" to MaterialTheme.colorScheme.tertiary
         "Shipped" -> "Shipped" to MaterialTheme.colorScheme.primary
@@ -98,7 +97,7 @@ fun OrderCard(order: Order) {
     }
 }
 
-data class Order(
+data class OrderItem(
     val id: String,
     val productName: String,
     val status: String,

@@ -13,31 +13,30 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WalletScreen() {
+fun WalletScreen(modifier: Modifier = Modifier) {
     val balance = remember { 0.12567890 }
     val transactions = remember {
         listOf(
-            Transaction("T001", "Received from @alice", 0.05, "receive", 1715097600000),
-            Transaction("T002", "Sent to @bob", 0.02, "send", 1715184000000),
-            Transaction("T003", "Received from @charlie", 0.1, "receive", 1715270400000),
+            TransactionItem("T001", "Received from @alice", 0.05, "receive", 1715097600000),
+            TransactionItem("T002", "Sent to @bob", 0.02, "send", 1715184000000),
+            TransactionItem("T003", "Received from @charlie", 0.1, "receive", 1715270400000),
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Wallet") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        TopAppBar(
+            title = { Text("Wallet") },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
-        }
-    ) { paddingValues ->
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp)
         ) {
             Card(
@@ -74,7 +73,7 @@ fun WalletScreen() {
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* Send Bitcoin */ }
+                    onClick = { }
                 ) {
                     Icon(Icons.Default.Send, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -82,7 +81,7 @@ fun WalletScreen() {
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { /* Receive Bitcoin */ }
+                    onClick = { }
                 ) {
                     Icon(Icons.Default.CallReceived, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -111,7 +110,7 @@ fun WalletScreen() {
 }
 
 @Composable
-fun TransactionCard(transaction: Transaction) {
+fun TransactionCard(transaction: TransactionItem) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -153,7 +152,7 @@ fun TransactionCard(transaction: Transaction) {
                 }
             }
             Text(
-                text = if (transaction.type == "receive") "+" else "-" + "₿%.8f".format(transaction.amount),
+                text = (if (transaction.type == "receive") "+" else "-") + "₿%.8f".format(transaction.amount),
                 style = MaterialTheme.typography.titleMedium,
                 color = if (transaction.type == "receive") {
                     MaterialTheme.colorScheme.primary
@@ -165,11 +164,11 @@ fun TransactionCard(transaction: Transaction) {
     }
 }
 
-data class Transaction(
+data class TransactionItem(
     val id: String,
     val description: String,
     val amount: Double,
-    val type: String, // "send" or "receive"
+    val type: String,
     val timestamp: Long
 )
 
