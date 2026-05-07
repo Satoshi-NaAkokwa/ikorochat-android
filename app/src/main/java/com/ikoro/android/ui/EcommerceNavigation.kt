@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 
 /**
  * ₿ Ọ F Ọ E-commerce UI (Simplified Offline-First)
- * Bottom navigation with Chat, Marketplace, Wallet, and Orders tabs
+ * Bottom navigation with Chat, Marketplace, Media, Wallet, and Orders tabs
  * All features work 100% offline with mesh network support
  */
 enum class EcommerceTab {
     CHAT,
     MARKETPLACE,
+    MEDIA,
     WALLET,
     ORDERS
 }
@@ -42,6 +43,12 @@ fun EcommerceNavigation(
                     label = { Text("Marketplace") }
                 )
                 NavigationBarItem(
+                    selected = selectedTab == EcommerceTab.MEDIA,
+                    onClick = { selectedTab = EcommerceTab.MEDIA },
+                    icon = { Icon(Icons.Default.PhotoLibrary, contentDescription = null) },
+                    label = { Text("Media") }
+                )
+                NavigationBarItem(
                     selected = selectedTab == EcommerceTab.WALLET,
                     onClick = { selectedTab = EcommerceTab.WALLET },
                     icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null) },
@@ -64,6 +71,9 @@ fun EcommerceNavigation(
             }
             EcommerceTab.MARKETPLACE -> {
                 com.ikoro.android.ui.screens.MarketplaceScreen(modifier = Modifier.padding(innerPadding))
+            }
+            EcommerceTab.MEDIA -> {
+                com.ikoro.android.ui.screens.MediaScreen(modifier = Modifier.padding(innerPadding))
             }
             EcommerceTab.WALLET -> {
                 com.ikoro.android.ui.screens.WalletScreen(modifier = Modifier.padding(innerPadding))
