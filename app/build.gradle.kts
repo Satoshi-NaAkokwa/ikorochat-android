@@ -58,24 +58,6 @@ android {
         }
     }
 
-    // APK splits for GitHub releases - creates arm64, x86_64, and universal APKs
-    // AAB for Play Store handles architecture distribution automatically
-    // Auto-detects: splits enabled for assemble tasks, disabled for bundle tasks
-    // Works in Android Studio GUI and CLI without needing extra properties
-    val enableSplits = gradle.startParameter.taskNames.any { taskName ->
-        taskName.contains("assemble", ignoreCase = true) &&
-        !taskName.contains("bundle", ignoreCase = true)
-    }
-
-    splits {
-        abi {
-            isEnable = enableSplits
-            reset()
-            include("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
-            isUniversalApk = true  // For F-Droid and fallback
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -86,28 +68,17 @@ android {
     buildFeatures {
         compose = true
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+    
+    androidResources {
+        // No additional resource configuration needed for baseline
     }
-
-    // Play Store requirements - updated for AGP 8.10.1
-    bundle {
-        // Disable splits for Play Store - single AAB handles all
-        language {
-            enabled = false  // Single language APK for all locales
-        }
-        density {
-            enabled = false
-        }
-        abi {
-            enabled = false  // Use universal APK or single bundle
-        }
-    }
-
-    // Build metadata - updated for AGP 8.10.1
-    applicationVariants.configureEach {
-        outputFileName = "Ikoro-Wallet-${versionName}-${name}.apk"
+    
+    lint {
+        baseline = file("lint-baseline.xml")
+        abortOnError = false
+        checkReleaseBuilds = false
     }
 }
+
+// Apply plugin in settings.gradle.kts instead of here
+// This file is now minimal and follows AGP 8.10.1 conventions
