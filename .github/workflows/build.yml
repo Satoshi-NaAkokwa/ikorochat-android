@@ -22,10 +22,6 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          api-level: 35
-          build-tools: '35.0.0'
-          extra-repositories: 'm2google'
 
       - name: Build APK
         run: |
@@ -38,8 +34,3 @@ jobs:
           name: Ikoro-Wallet-APK
           path: app/build/outputs/apk/release/*.apk
           retention-days: 30
-
-      - name: Display build info
-        run: |
-          echo "Build completed successfully!"
-          find app/build/outputs/apk/release -name "*.apk" -exec ls -la {} \;
