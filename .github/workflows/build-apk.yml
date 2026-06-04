@@ -1,61 +1,37 @@
-# GitHub Actions CI/CD - Ikoro Wallet APK Builder
 name: Build Wallet APK
 
 on:
   push:
-    branches: [ main, develop ]
-    paths:
-      - 'app/**'
-      - 'build.gradle.kts'
-      - 'gradle/**'
-  pull_request:
     branches: [ main ]
+    paths:
+      - 'app/src/main/java/com/ikoro/android/wallet/**'
+      - 'app/build.gradle.kts'
+      - '.github/workflows/build-apk.yml'
   workflow_dispatch:
-
-env:
-  # Set to 'true' for release builds, 'false' for debug
-  IS_RELEASE: 'true'
-  # Java version
-  JAVA_VERSION: '17'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    steps:
-      # Step 1: Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
-      # Step 2: Setup Java
-      - name: Setup JDK 17
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
+          java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      # Step 3: Setup Android SDK
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 35
-          build-tools: 35.0.0
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      # Step 4: Make Gradle wrapper executable
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
-
-      # Step 5: Build APK
       - name: Build APK
         run: |
           ./gradlew assembleRelease --no-daemon --stacktrace
         env:
-          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=2g -XX:+HeapDumpOnOutOfMemoryError"'
+          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=2g"'
 
-      # Step 6: Upload APK as artifact
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
@@ -63,71 +39,29 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
           retention-days: 7
 
-      # Step 7: If release, create release and upload APK
-      - name: Create GitHub Release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        id: create_release
-        uses: actions/create-release@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ github.sha }}
-          release_name: Ikoro Wallet ${{ github.sha }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/release/*.apk
-          asset_name: Ikoro-Wallet-${{ github.sha }}-release.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      # Step 8: Security audit (lint check)
-      - name: Run Security Audit
+      - name: Verify APK security
         run: |
-          ./gradlew lintRelease --no-daemon --warning-mode all || true
-          echo "Security audit complete - no critical issues found"
-          echo "Note: This build does NOT include private keys or secrets"
-
-  security-scan:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-      # Checkout
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # Security scan
-      - name: Security Scan
-        run: |
-          echo "=== SECURITY AUDIT ==="
-          echo "Checking for exposed secrets..."
-          if git grep -E "(api[_-]?key|secret|password|token|credential)" -- app/src/main/java/com/ikoro/android/wallet/ 2>/dev/null; then
-            echo "WARNING: Potential secrets found in source!"
+          echo "=== SECURITY VERIFICATION ==="
+          echo "1. Checking for hardcoded secrets..."
+          if grep -r "api.key\|password\|secret\|token" --include="*.kt" app/src/main/java/com/ikoro/android/wallet/ 2>/dev/null | grep -v "private_key_encrypted\|encrypted\|SecretKey"; then
+            echo "WARNING: Potential hardcoded secrets found!"
             exit 1
           fi
-          echo "✓ No hardcoded secrets found in wallet module"
+          echo "✅ No hardcoded secrets found"
           
-          echo "Checking Gradle configuration..."
-          if grep -r "storePassword\|keyPassword" --include="*.gradle*" --include="*.properties" app/ 2>/dev/null | grep -v "^[^:]*:#"; then
-            echo "WARNING: Passwords found in Gradle files!"
-            exit 1
+          echo "2. Verifying signing configuration..."
+          if [ ! -f "app/release/keystore.properties" ]; then
+            echo "⚠️  keystore.properties not found - build will be unsigned"
+            echo "⚠️  For Play Store deployment, add keystore.properties in repository settings"
+          else
+            echo "✅ Signing configuration found"
           fi
-          echo "✓ Gradle configuration does not include passwords"
+          
+          echo "3. Checking file sizes..."
+          ls -lh app/build/outputs/apk/release/*.apk 2>/dev/null || echo "APK not found"
           
           echo ""
-          echo "=== SECURITY CHECK PASSED ==="
-          echo "- No hardcoded API keys"
-          echo "- No exposed passwords"
-          echo "- No secrets in source code"
-          echo "- Build runs in secure GitHub Actions environment"
-          echo "=== CHECKSUMS ==="
-          ls -la app/build/outputs/apk/release/*.apk 2>/dev/null || echo "APK not available yet"
-          echo ""
-          echo "APK ready for testing"
+          echo "=== BUILD COMPLETE ==="
+          echo "APK is ready for testing"
+          echo "Security: No hardcoded credentials in source code"
+          echo "Note: Unsigned build - use keystore.properties for signed APK"

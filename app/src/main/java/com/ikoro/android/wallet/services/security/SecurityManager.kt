@@ -2,140 +2,195 @@ package com.ikoro.android.wallet.services.security
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
-import com.ikoro.android.wallet.domain.service.KeyManager
-import javax.inject.Inject
-import javax.inject.Singleton
-
+import androidx.security.crypto.MasterKey
 
 /**
- * Security Manager - handles wallet security features
+ * Security Manager - Authentication and fraud detection
  */
-@Singleton
-class SecurityManager @Inject constructor(
-    private val context: Context,
-    private val keyManager: KeyManager
-) {
+class SecurityManager private constructor(private val context: Context) {
+    
     companion object {
-        const val SECURITY_SETTINGS = "wallet_security_settings"
-        const val THRESHOLD_SECURE = 0.1 // 0.1 BTC threshold
-        const val FRAUD_DETECTION_WINDOWS = 3600000L // 1 hour
+        private const val TAG = "SecurityManager"
+        
+        // Fraud detection thresholds
+        const val MAX_SINGLE_TX_THRESHOLD = 0.1 // BTC
+        const val MAX_DAILY_TX_THRESHOLD = 1.0 // BTC
+        const val RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
+        const val RATE_LIMIT_MAX = 10
+        
+        // Pin requirements
+        const val MIN_PIN_LENGTH = 4
+        const val MAX_PIN_LENGTH = 6
+        
+        @Volatile
+        private var INSTANCE: SecurityManager? = null
     }
-
-    private val sharedPreferences by lazy {
-        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-        EncryptedSharedPreferences.getPreferences(
-            SECURITY_SETTINGS,
-            masterKeyAlias,
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+    
+    init {
+        // Initialize PIN storage
+        initializePINStorage()
     }
-
-    // Fraud detection rules
-    fun detectFraud(txnAmount: Double, currency: String): FraudDetectionResult {
-        val threshold = getTransactionThreshold()
-
-        if (txnAmount > threshold) {
-            return FraudDetectionResult(
-                isFraud = true,
-                reason = "Amount exceeds secure threshold",
-                threshold = threshold
-            )
+    
+    fun getInstance(): SecurityManager {
+        return INSTANCE ?: synchronized(this) {
+            INSTANCE ?: SecurityManager(context.applicationContext).also { INSTANCE = it }
         }
-
-        // Check for rapid transactions
-        if (isRapidTransaction()) {
-            return FraudDetectionResult(
-                isFraud = true,
-                reason = "Rapid transaction pattern detected",
-                threshold = threshold
+    }
+    
+    // PIN Storage
+    private fun initializePINStorage() {
+        try {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            
+            val prefs = EncryptedSharedPreferences.create(
+                context,
+                "security_settings_encrypted",
+                masterKey,
+                EncryptedSharedPreferences.EncryptionScheme.AES256_GCM
             )
+            
+            prefs.edit().apply()
+            
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to initialize PIN storage", e)
         }
-
-        // Check for unusual patterns
-        if (isUnusualPattern()) {
-            return FraudDetectionResult(
-                isFraud = true,
-                reason = "Unusual transaction pattern",
-                threshold = threshold
+    }
+    
+    // Authentication
+    fun verifyPIN(pin: String): Boolean {
+        return try {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            
+            val prefs = EncryptedSharedPreferences.create(
+                context,
+                "security_settings_encrypted",
+                masterKey,
+                EncryptedSharedPreferences.EncryptionScheme.AES256_GCM
             )
+            
+            val storedPIN = prefs.getString("pin_hash", null)
+            if (storedPIN == null) return false
+            
+            // Hash the provided PIN and compare
+            val inputHash = hashPIN(pin)
+            inputHash == storedPIN
+            
+        } catch (e: Exception) {
+            false
         }
-
-        return FraudDetectionResult(isFraud = false)
     }
-
-    // Security check helper
-    private fun getTransactionThreshold(): Double {
-        return sharedPreferences.getFloat("max_transaction", THRESHOLD_SECURE.toFloat())
+    
+    fun storePIN(pin: String) {
+        try {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            
+            val prefs = EncryptedSharedPreferences.create(
+                context,
+                "security_settings_encrypted",
+                masterKey,
+                EncryptedSharedPreferences.EncryptionScheme.AES256_GCM
+            )
+            
+            prefs.edit()
+                .putString("pin_hash", hashPIN(pin))
+                .apply()
+                
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to store PIN", e)
+        }
     }
-
-    private fun isRapidTransaction(): Boolean {
-        // Check if multiple transactions occurred recently
-        return false // Placeholder
-    }
-
-    private fun isUnusualPattern(): Boolean {
-        // Check for unusual patterns (new recipient, new amount, etc.)
-        return false // Placeholder
-    }
-
-    // Biometric authentication
-    fun supportsBiometric(): Boolean {
-        // Check if device supports biometric
-        return true // Placeholder
-    }
-
-    fun isBiometricEnabled(): Boolean {
-        return sharedPreferences.getBoolean("biometric_enabled", false)
-    }
-
-    fun enableBiometric(enabled: Boolean) {
-        sharedPreferences.edit().putBoolean("biometric_enabled", enabled).apply()
-    }
-
-    // PIN management
-    fun isPinRequired(): Boolean {
-        return sharedPreferences.getBoolean("pin_required", true)
-    }
-
-    fun isPinSet(): Boolean {
-        return sharedPreferences.contains("pin_hash")
-    }
-
-    fun verifyPin(inputPin: String): Boolean {
-        val storedHash = sharedPreferences.getString("pin_hash", null) ?: return false
-        // Compare inputPin hash with stored hash
-        return inputPin.md5() == storedHash
-    }
-
-    fun setPin(pin: String): Boolean {
-        if (pin.length < 4) return false
-        sharedPreferences.edit()
-            .putString("pin_hash", pin.md5())
-            .putBoolean("pin_required", true)
-            .apply()
+    
+    fun changePIN(oldPIN: String, newPIN: String): Boolean {
+        if (!verifyPIN(oldPIN)) return false
+        
+        storePIN(newPIN)
         return true
     }
-
-    fun clearPin() {
-        sharedPreferences.edit().clear().apply()
+    
+    // Biometric Authentication
+    fun isBiometricAvailable(): Boolean {
+        return android.os.Build.VERSION.SDK_INT >= 23
     }
-
-    // Fraud detection result model
-    data class FraudDetectionResult(
-        val isFraud: Boolean,
-        val reason: String? = null,
-        val threshold: Double = 0.0
-    ) {
-        fun shouldPromptForConfirmation(): Boolean = isFraud
+    
+    fun canUseBiometric(): Boolean {
+        return isBiometricAvailable()
     }
-}
-
-// Extension for MD5
-fun String.md5(): String {
-    val digest = java.security.MessageDigest.getInstance("MD5")
-    val hash = digest.digest(this.toByteArray())
-    return hash.joinToString("") { "%02x".format(it) }
+    
+    // Fraud Detection
+    private val transactionCounters = HashMap<String, Int>()
+    private val transactionTimestamps = HashMap<String, Long>()
+    
+    fun checkRateLimit(category: String): Boolean {
+        val now = System.currentTimeMillis()
+        val windowStart = now - RATE_LIMIT_WINDOW_MS
+        
+        // Clean old entries
+        val expiredKeys = transactionTimestamps.filterValues { _it < windowStart }.keys
+        expiredKeys.forEach {
+            transactionCounters.remove(it)
+            transactionTimestamps.remove(it)
+        }
+        
+        // Check current count
+        val currentCount = transactionCounters.getOrPut(category) { 0 }
+        
+        if (currentCount >= RATE_LIMIT_MAX) {
+            return false
+        }
+        
+        // Increment counter
+        transactionCounters[category] = currentCount + 1
+        transactionTimestamps[category] = now
+        
+        return true
+    }
+    
+    fun checkBalanceThreshold(amount: Double): Boolean {
+        return amount <= MAX_SINGLE_TX_THRESHOLD
+    }
+    
+    // PIN Hashing
+    private fun hashPIN(pin: String): String {
+        val input = (pin + System.currentTimeMillis()).encodeToByteArray()
+        return java.security.MessageDigest.getInstance("SHA-256").digest(input)
+            .fold("", { str, byte -> str + "%02x".format(byte) })
+    }
+    
+    // Security logging
+    fun logSecurityEvent(event: String) {
+        android.util.Log.d(TAG, "Security event: $event")
+    }
+    
+    fun getSecurityStatus(): Map<String, Any> {
+        return mapOf(
+            "pin_set" to hasPIN(),
+            "biometric_available" to isBiometricAvailable(),
+            "encryption" to "AES256_GCM"
+        )
+    }
+    
+    private fun hasPIN(): Boolean {
+        return try {
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            
+            val prefs = EncryptedSharedPreferences.create(
+                context,
+                "security_settings_encrypted",
+                masterKey,
+                EncryptedSharedPreferences.EncryptionScheme.AES256_GCM
+            )
+            
+            prefs.contains("pin_hash")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
