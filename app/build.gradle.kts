@@ -1,3 +1,9 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+}
+
 android {
     namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -79,6 +85,3 @@ android {
         checkReleaseBuilds = false
     }
 }
-
-// Apply plugin in settings.gradle.kts instead of here
-// This file is now minimal and follows AGP 8.10.1 conventions
