@@ -91,31 +91,23 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    lint {
-        baseline = file("lint-baseline.xml")
-        abortOnError = false
-        checkReleaseBuilds = false
-    }
 
-    // Play Store requirements
+    // Play Store requirements - updated for AGP 8.10.1
     bundle {
         // Disable splits for Play Store - single AAB handles all
         language {
-            enableSplit = false  // Single language APK for all locales
+            enabled = false  // Single language APK for all locales
         }
         density {
-            enableSplit = false
+            enabled = false
         }
         abi {
-            enableSplit = false  // Use universal APK or single bundle
+            enabled = false  // Use universal APK or single bundle
         }
     }
 
-    // Play Store app metadata
-    applicationVariants.all {
-        outputs.all {
-            // Renamed property in newer AGP
-            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName = "Ikoro-Wallet-${versionName}-${name}.apk"
-        }
+    // Build metadata - updated for AGP 8.10.1
+    applicationVariants.configureEach {
+        outputFileName = "Ikoro-Wallet-${versionName}-${name}.apk"
     }
 }
