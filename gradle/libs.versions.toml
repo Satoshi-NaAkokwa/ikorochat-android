@@ -63,6 +63,13 @@ kotlinx-coroutines-test = "1.6"
 
 lifecycle-process = "2.8.7"
 
+# Hilt
+hilt = "2.52.0"
+hilt-work = "1.2.0"
+
+# Room
+room = "2.6.1"
+
 [libraries]
 # AndroidX Core
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
@@ -129,8 +136,19 @@ androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-inline" }
-roboelectric = { module = "org.robolectric:robolectric", version.ref = "roboelectric"}
+roboelectric = { module = "org.robolectric:roboelectric", version.ref = "roboelectric"}
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test"}
+
+# Hilt dependencies
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt" }
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hilt-work" }
+
+# Room dependencies
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -174,12 +192,11 @@ compose-testing = [
     "androidx-compose-ui-test-manifest"
 ]
 
-# Hilt and Jetpack dependencies
 hilt = [
     "androidx-hilt-navigation-compose",
     "dagger-hilt-android",
     "hilt-compiler",
-    "hilt-work",
+    "androidx-hilt-work",
 ]
 
 room = [
@@ -192,12 +209,3 @@ wallet = [
     "okhttp",
     "kotlinx-coroutines-android"
 ]
-
-androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "security-crypto" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt" }
-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hilt-work" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
