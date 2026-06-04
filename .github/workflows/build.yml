@@ -10,11 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download source as ZIP
-        run: |
-          curl -s -L "https://api.github.com/repos/Satoshi-NaAkokwa/ikorochat-android/zipball/main" -o /tmp/source.zip
-          unzip -q /tmp/source.zip -d /tmp/
-          mv /tmp/Satoshi-NaAkokwa-ikorochat-android-*/ /tmp/ikorowallet-source/
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -22,10 +19,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Build with Gradle
-        working-directory: /tmp/ikorowallet-source
-        run: |
-          ./gradlew assembleRelease --no-daemon --stacktrace
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
         env:
           GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=2g"'
 
@@ -33,11 +31,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Ikoro-Wallet-APK
-          path: /tmp/ikorowallet-source/app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/release/*.apk
           retention-days: 7
 
       - name: Verify APK security
-        working-directory: /tmp/ikorowallet-source
         run: |
           echo "=== SECURITY VERIFICATION ==="
           echo "1. Checking for hardcoded secrets..."
