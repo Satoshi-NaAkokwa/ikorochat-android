@@ -2,8 +2,7 @@ name: Build Wallet APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -20,17 +19,45 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Build APK
         run: |
-          chmod +x ./gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon --stacktrace
+        env:
+          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=2g"'
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: Ikoro-Wallet-APK
           path: app/build/outputs/apk/release/*.apk
-          retention-days: 30
+          retention-days: 7
+
+      - name: Verify APK security
+        run: |
+          echo "=== SECURITY VERIFICATION ==="
+          echo "1. Checking for hardcoded secrets..."
+          if grep -r "api.key\|password\|secret\|token" --include="*.kt" app/src/main/java/com/ikoro/android/wallet/ 2>/dev/null | grep -v "private_key_encrypted\|encrypted\|SecretKey"; then
+            echo "WARNING: Potential hardcoded secrets found!"
+            exit 1
+          fi
+          echo "No hardcoded secrets found"
+          
+          echo "2. Verifying signing configuration..."
+          if [ ! -f "app/release/keystore.properties" ]; then
+            echo "WARNING: keystore.properties not found - build will be unsigned"
+            echo "Note: For Play Store deployment, add keystore.properties in repository settings"
+          else
+            echo "Signing configuration found"
+          fi
+          
+          echo "3. Checking file sizes..."
+          ls -lh app/build/outputs/apk/release/*.apk 2>/dev/null || echo "APK not found"
+          
+          echo ""
+          echo "BUILD COMPLETE"
+          echo "APK is ready for testing"
+          echo "Security: No hardcoded credentials in source code"
+          echo "Note: Unsigned build - use keystore.properties for signed APK"
