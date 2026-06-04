@@ -13,6 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: Set up JDK 17
@@ -40,7 +41,7 @@ jobs:
         run: |
           echo "=== Verification ==="
           echo "1. Checking for hardcoded secrets..."
-          if grep -r "api.key\\|password\\|secret\\|token" --include="*.kt" app/src/main/java/com/ikoro/android/wallet/ 2>/dev/null | grep -v "private_key_encrypted\\|encrypted\\|SecretKey"; then
+          if grep -r "api.key\|password\|secret\|token" --include="*.kt" app/src/main/java/com/ikoro/android/wallet/ 2>/dev/null | grep -v "private_key_encrypted\|encrypted\|SecretKey"; then
             echo "WARNING: Potential hardcoded secrets found!"
             exit 1
           fi
