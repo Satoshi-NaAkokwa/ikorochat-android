@@ -20,8 +20,15 @@ jobs:
           echo "Runner: ${{ runner.os }}"
           echo "Host: ${{ runner.host }}"
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout code with SSH-like method
+        run: |
+          # Use the GitHub token with a URL that doesn't require git auth
+          # by cloning to a temp location and copying
+          git config --global init.defaultBranch main
+          git clone --depth 1 https://github.com/$GITHUB_REPOSITORY.git /tmp/repo
+          cp -r /tmp/repo/* .
+          cp -r /tmp/repo/.git .
+          echo "Clone completed"
 
       - name: Verify checkout
         run: |
@@ -42,7 +49,7 @@ jobs:
       - name: Build APK
         run: |
           echo "=== Building APK ==="
-          ./gradlew assembleRelease --no-daemon --stacktrace
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
