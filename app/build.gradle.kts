@@ -4,26 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-import java.util.Properties
-
 android {
     namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
-
-    // Signing configuration for release builds
-    val keystoreFile = file("keystore.properties")
-    if (keystoreFile.exists()) {
-        val props = Properties()
-        props.load(keystoreFile.inputStream())
-        signingConfigs {
-            create("release") {
-                storeFile = file(props.getProperty("storeFile"))
-                storePassword = props.getProperty("storePassword")
-                keyAlias = props.getProperty("keyAlias")
-                keyPassword = props.getProperty("keyPassword")
-            }
-        }
-    }
 
     defaultConfig {
         applicationId = "com.ikoro.android.wallet"
@@ -39,16 +22,14 @@ android {
     }
 
     dependenciesInfo {
-        // Disables dependency metadata when building APKs.
         includeInApk = false
-        // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
     }
 
     buildTypes {
         debug {
+            isDebuggable = true
             ndk {
-                // Include x86_64 for emulator support during development
                 abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
             }
         }
@@ -59,7 +40,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Use signing config for release builds
+            // Only sign release builds if keystore.properties exists
             if (file("keystore.properties").exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
@@ -75,10 +56,7 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    
-    androidResources {
-        // No additional resource configuration needed for baseline
+        buildConfig = true
     }
     
     lint {
