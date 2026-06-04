@@ -9,12 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          ref: main
+          fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -22,10 +26,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build APK
+      - name: Build with Gradle
         run: |
           ./gradlew assembleRelease --no-daemon --stacktrace
         env:
@@ -59,8 +60,5 @@ jobs:
           echo "3. Checking file sizes..."
           ls -lh app/build/outputs/apk/release/*.apk 2>/dev/null || echo "APK not found"
           
-          echo ""
           echo "BUILD COMPLETE"
           echo "APK is ready for testing"
-          echo "Security: No hardcoded credentials in source code"
-          echo "Note: Unsigned build - use keystore.properties for signed APK"
