@@ -1,12 +1,3 @@
-import java.util.Properties
-
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.compose)
-}
-
 android {
     namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -27,11 +18,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ikoro.droid"
+        applicationId = "com.ikoro.android.wallet"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 36
-        versionName = "3.0.0"
+        versionCode = 100
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -86,11 +77,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -105,73 +96,37 @@ android {
         abortOnError = false
         checkReleaseBuilds = false
     }
-}
 
-dependencies {
-    // Core Android dependencies
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.appcompat)
+    // Play Store requirements
+    bundle {
+        // Enable App Bundle for Play Store
+        language {
+            enableSplit = false  // Single language APK for all locales
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = false  // Use universal APK or single bundle
+        }
+    }
 
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
+    // Split assets per ABI for Play Store optimization
+    androidResources {
+        // Play Store optimized settings
+        splits {
+            abi {
+                reset()
+                include("arm64-v8a", "x86_64")  // Most common architectures
+            }
+        }
+    }
 
-    // Lifecycle
-    implementation(libs.bundles.lifecycle)
-    implementation(libs.androidx.lifecycle.process)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
-
-    // Permissions
-    implementation(libs.accompanist.permissions)
-
-    // QR
-    implementation(libs.zxing.core)
-    implementation(libs.mlkit.barcode.scanning)
-
-    // CameraX
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.compose)
-
-    // Cryptography
-    implementation(libs.bundles.cryptography)
-
-    // JSON
-    implementation(libs.gson)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Bluetooth
-    implementation(libs.nordic.ble)
-
-    // WebSocket
-    implementation(libs.okhttp)
-
-    // Arti (Tor in Rust) Android bridge - custom build from latest source
-    // Built with rustls, 16KB page size support, and onio//un service client
-    // Native libraries are in src/tor/jniLibs/ (extracted from arti-custom.aar)
-    // Only included in tor flavor to reduce APK size for standard builds
-    // Note: AAR is kept in libs/ for reference, but libraries loaded from jniLibs/
-
-    // Google Play Services Location
-    implementation(libs.gms.location)
-
-    // Security preferences
-    implementation(libs.androidx.security.crypto)
-
-    // EXIF orientation handling for images
-    implementation("androidx.exifinterface:exifinterface:1.3.7")
-
-    // Audio messaging - using Android's built-in MediaRecorder/MediaPlayer with AAC encoding
-    // No additional dependencies needed - MediaRecorder.AudioEncoder.AAC is built into Android
-
-    // Testing
-    testImplementation(libs.bundles.testing)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.bundles.compose.testing)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    // Play Store app metadata
+    applicationVariants.all {
+        outputs.all {
+            this as com.android.build.gradle.internal.api.AbpVariantOutputImpl
+            outputFileName = "Ikoro-Wallet-${versionName}-${name}.apk"
+        }
+    }
 }

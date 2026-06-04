@@ -141,6 +141,11 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
+# Wallet dependencies
+room = "2.6.1"
+hilt = "2.52.0"
+hilt-work = "1.2.0"
+
 [bundles]
 compose = [
     "androidx-compose-ui",
@@ -173,4 +178,32 @@ testing = [
 compose-testing = [
     "androidx-compose-ui-test-junit4",
     "androidx-compose-ui-test-manifest"
-] 
+]
+
+# Hilt and Jetpack dependencies
+hilt = [
+    "androidx-hilt-navigation-compose",
+    "dagger-hilt-android",
+    "hilt-compiler",
+    "hilt-work",
+]
+
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx",
+    "androidx-room-compiler"
+]
+
+wallet = [
+    "okhttp",
+    "kotlinx-coroutines-android"
+]
+
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "security-crypto" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt" }
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hilt-work" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" } 

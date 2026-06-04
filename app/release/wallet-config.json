@@ -1,0 +1,23 @@
+{
+  "name": "Ikoro Wallet",
+  "version": "1.0.0",
+  "versionCode": 100,
+  "minSdk": 26,
+  "targetSdk": 35,
+  "packages": [
+    "com.ikoro.android.wallet"
+  ],
+  "features": [
+    "wallet",
+    "backup",
+    "security",
+    "offline"
+  ],
+  "currencies": [
+    "bitcoin",
+    "ofo",
+    "naira",
+    "usdt",
+    "usdc"
+  ]
+}

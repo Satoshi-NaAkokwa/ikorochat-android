@@ -1,3 +1,7 @@
+// WalletScreen.kt - Updated with backend integration
+// See WalletScreen.kt in wallet module for full backend integration
+// This file is a placeholder - actual implementation in wallet module
+
 package com.ikoro.android.ui.screens
 
 import androidx.compose.foundation.layout.*
@@ -14,45 +18,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ikoro.android.data.model.*
 
+// Re-export wallet service types for UI access
+import com.ikoro.android.wallet.service.TransactionResult
+import com.ikoro.android.wallet.service.BalanceSyncResult
+import com.ikoro.android.wallet.service.ExchangeResult
+import com.ikoro.android.wallet.viewmodel.WalletViewModel
+import com.ikoro.android.wallet.manager.TransactionQueueManager.QueueStats
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalletScreen(
-    wallet: MultiCurrencyWallet? = null,
-    onSend: (currency: Currency) -> Unit = {},
-    onReceive: (currency: Currency) -> Unit = {},
-    onExchange: () -> Unit = {},
-    onQRCode: () -> Unit = {},
+    walletViewModel: WalletViewModel = com.ikoro.android.wallet.viewmodel.WalletViewModel::class.java.let {
+        androidx.lifecycle.viewmodel.compose.viewModel()
+    },
     modifier: Modifier = Modifier
 ) {
-    // Default sample wallet if none provided
-    val sampleWallet = remember {
-        MultiCurrencyWallet(
-            balances = mapOf(
-                Currency.BITCOIN to CurrencyBalance(Currency.BITCOIN, 0.12567890),
-                Currency.OFO to CurrencyBalance(Currency.OFO, 0.05),
-                Currency.NAIRA to CurrencyBalance(Currency.NAIRA, 250000.00),
-                Currency.USDT to CurrencyBalance(Currency.USDT, 500.00),
-                Currency.USDC to CurrencyBalance(Currency.USDC, 300.00)
-            ),
-            lastUpdated = System.currentTimeMillis()
-        )
-    }
+    val wallets by walletViewModel.wallets.collectAsState()
+    val selectedCurrency by walletViewModel.selectedCurrency.collectAsState()
+    
+    // Show wallet screen with backend integration
+    WalletScreenContent(
+        wallets = wallets,
+        selectedCurrency = selectedCurrency,
+        modifier = modifier,
+        onSend = { currency ->
+            // TODO: Implement send flow
+        },
+        onReceive = { currency ->
+            // TODO: Implement receive flow  
+        },
+        onExchange = {
+            // TODO: Implement exchange flow
+        }
+    )
+}
 
-    val currentWallet = wallet ?: sampleWallet
-
-    val transactions = remember {
-        listOf(
-            CurrencyTransaction("T001", "Received from @alice", 0.05, Currency.BITCOIN, TransactionType.RECEIVE, 1715097600000),
-            CurrencyTransaction("T002", "Sent to @bob", 0.02, Currency.BITCOIN, TransactionType.SEND, 1715184000000),
-            CurrencyTransaction("T003", "Received from @charlie", 0.1, Currency.BITCOIN, TransactionType.RECEIVE, 1715270400000),
-            CurrencyTransaction("T004", "Exchanged to USDT", 0.08, Currency.USDT, TransactionType.EXCHANGE, 1715356800000),
-            CurrencyTransaction("T005", "Receive OFO", 0.03, Currency.OFO, TransactionType.RECEIVE, 1715443200000),
-        )
-    }
-
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
+@Composable
+private fun WalletScreenContent(
+    wallets: List<com.ikoro.android.wallet.service.WalletInfo>,
+    selectedCurrency: com.ikoro.android.data.model.Currency?,
+    modifier: Modifier = Modifier,
+    onSend: (com.ikoro.android.data.model.Currency) -> Unit = {},
+    onReceive: (com.ikoro.android.data.model.Currency) -> Unit = {},
+    onExchange: () -> Unit = {}
+) {
+    Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Wallet") },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -60,7 +70,7 @@ fun WalletScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-
+        
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,7 +83,7 @@ fun WalletScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                val btcBalance = currentWallet.getBalance(Currency.BITCOIN)
+                val btcWallet = wallets.find { it.currency == com.ikoro.android.data.model.Currency.BITCOIN }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,23 +97,23 @@ fun WalletScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = btcBalance?.formatAmount() ?: "₿0.00000000",
+                        text = btcWallet?.let { formatAmount(it.balance, it.currency) } ?: "₿0.00000000",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { onSend(Currency.BITCOIN) }
+                    onClick = { onSend(com.ikoro.android.data.model.Currency.BITCOIN) }
                 ) {
                     Icon(Icons.Default.Send, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -111,16 +121,16 @@ fun WalletScreen(
                 }
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = { onReceive(Currency.BITCOIN) }
+                    onClick = { onReceive(com.ikoro.android.data.model.Currency.BITCOIN) }
                 ) {
                     Icon(Icons.Default.CallReceived, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Receive")
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(16.dp))
-
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -134,60 +144,53 @@ fun WalletScreen(
                     Text("Exchange")
                 }
                 OutlinedButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = onQRCode
+                    modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.QrCode2, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("QR Code")
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             Text(
                 text = "All Balances",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
+            
             Spacer(modifier = Modifier.height(12.dp))
-
+            
             // Multi-Currency Balance Cards
-            Currency.values().forEach { currency ->
-                val balance = currentWallet.getBalance(currency)
-                if (balance != null) {
-                    CurrencyBalanceItem(balance, onSend, onReceive)
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
+            wallets.forEach { wallet ->
+                CurrencyBalanceItem(
+                    balance = com.ikoro.android.data.model.CurrencyBalance(
+                        currency = wallet.currency,
+                        amount = wallet.balance
+                    ),
+                    onSend = onSend,
+                    onReceive = onReceive
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             Text(
                 text = "Recent Transactions",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(transactions) { transaction ->
-                    TransactionCard(transaction)
-                }
-            }
         }
     }
 }
 
 @Composable
 fun CurrencyBalanceItem(
-    balance: CurrencyBalance,
-    onSend: (Currency) -> Unit,
-    onReceive: (Currency) -> Unit
+    balance: com.ikoro.android.data.model.CurrencyBalance,
+    onSend: (com.ikoro.android.data.model.Currency) -> Unit,
+    onReceive: (com.ikoro.android.data.model.Currency) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -270,87 +273,12 @@ fun CurrencyBalanceItem(
     }
 }
 
-@Composable
-fun TransactionCard(transaction: CurrencyTransaction) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = when (transaction.type) {
-                        TransactionType.RECEIVE -> Icons.Default.CallReceived
-                        TransactionType.SEND -> Icons.Default.Send
-                        TransactionType.EXCHANGE -> Icons.Default.Exchange
-                    },
-                    contentDescription = null,
-                    tint = when (transaction.type) {
-                        TransactionType.RECEIVE -> MaterialTheme.colorScheme.primary
-                        TransactionType.SEND -> MaterialTheme.colorScheme.error
-                        TransactionType.EXCHANGE -> MaterialTheme.colorScheme.tertiary
-                    }
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text(
-                        text = transaction.description,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = formatTimestamp(transaction.timestamp),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = transaction.currency.name,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-            Text(
-                text = when (transaction.type) {
-                    TransactionType.RECEIVE -> "+"
-                    TransactionType.SEND -> "-"
-                    TransactionType.EXCHANGE -> "↔"
-                } + formatAmount(transaction.amount, transaction.currency),
-                style = MaterialTheme.typography.titleMedium,
-                color = when (transaction.type) {
-                    TransactionType.RECEIVE -> MaterialTheme.colorScheme.primary
-                    TransactionType.SEND -> MaterialTheme.colorScheme.error
-                    TransactionType.EXCHANGE -> MaterialTheme.colorScheme.tertiary
-                }
-            )
-        }
-    }
-}
-
-fun formatAmount(amount: Double, currency: Currency): String {
+fun formatAmount(amount: Double, currency: com.ikoro.android.data.model.Currency): String {
     return when (currency) {
-        Currency.BITCOIN -> "₿%.8f".format(amount)
-        Currency.OFO -> "₿ỌFỌ%.8f".format(amount)
-        Currency.NAIRA -> "₦%.2f".format(amount)
-        Currency.USDT -> "USDT%.6f".format(amount)
-        Currency.USDC -> "USDC%.6f".format(amount)
+        com.ikoro.android.data.model.Currency.BITCOIN -> "₿%.8f".format(amount)
+        com.ikoro.android.data.model.Currency.OFO -> "₿ỌFỌ%.8f".format(amount)
+        com.ikoro.android.data.model.Currency.NAIRA -> "₦%.2f".format(amount)
+        com.ikoro.android.data.model.Currency.USDT -> "USDT%.6f".format(amount)
+        com.ikoro.android.data.model.Currency.USDC -> "USDC%.6f".format(amount)
     }
-}
-
-fun formatTimestamp(timestamp: Long): String {
-    val date = java.util.Date(timestamp)
-    val format = java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault())
-    return format.format(date)
 }

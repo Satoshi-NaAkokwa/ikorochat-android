@@ -1,71 +1,59 @@
-# Android Studio / IntelliJ
-.idea/
-*.iml
-build/
-!*/build/filtered-manifest/
-!*/build/generated/
-!*/build/intermediates/
-local.properties
-.gradle/
-captures/
-.externalNativeBuild/
-debug_keystore/
-*.keystore
-debug.keystore
-app/release
-
+#
 # Gradle
-/build/
-/.gradle/
-/captures/
+/build
+.gradle
+gradle-appsetting.txt
+local.properties
+
+#
+# Keystore (never commit these!)
+keystore.properties
+release.keystore
+*.keystore
+
+#
+# Generated files
 *.apk
 *.aab
-*.ap_
-*.dex
+outputs.json
+apk-output.json
 
-# Mac
+#
+# IDE
+.idea
+*.iml
+*.iws
+*.ipr
+.project
+.settings/
+.classpath
+.factorypath
+.vscode/
+
+#
+# OS
 .DS_Store
-*.swp
-*~
+Thumbs.db
 
-# Maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-
-# Linters
-.lint/
-
-# Other
+#
+# Log files
 *.log
-.cxx/
-# Gradle/Android build directories (but not tools/arti-build/)
-**/build/
-!tools/arti-build/
-out/
-gen/
-*~
-*.swp
-*.lock
-.goosehints
+gradle-wrapper.log
 
-# Google services
-google-services.json
+#
+# Test coverage
+coverage
+.jacoco
 
-# Keystore files
-*.jks
-*.keystore
+#
+# Lint
+lint-results.xml
+lint-results_release.xml
+lint-results-failures.xml
+lint-baseline.xml
 
-# Arti build artifacts (cloned repo and Rust build cache)
-tools/arti-build/.arti-source/
-tools/arti-build/target/
-
-# Keystore properties (secrets)
-keystore.properties
-
-# Kotlin build sessions
-.kotlin/
+#
+# Dependency graphs
+dependencies
+dependency.txt
+dependency-lock
