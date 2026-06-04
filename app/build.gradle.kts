@@ -99,7 +99,7 @@ android {
 
     // Play Store requirements
     bundle {
-        // Enable App Bundle for Play Store
+        // Disable splits for Play Store - single AAB handles all
         language {
             enableSplit = false  // Single language APK for all locales
         }
@@ -111,22 +111,11 @@ android {
         }
     }
 
-    // Split assets per ABI for Play Store optimization
-    androidResources {
-        // Play Store optimized settings
-        splits {
-            abi {
-                reset()
-                include("arm64-v8a", "x86_64")  // Most common architectures
-            }
-        }
-    }
-
     // Play Store app metadata
     applicationVariants.all {
         outputs.all {
-            this as com.android.build.gradle.internal.api.AbpVariantOutputImpl
-            outputFileName = "Ikoro-Wallet-${versionName}-${name}.apk"
+            // Renamed property in newer AGP
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName = "Ikoro-Wallet-${versionName}-${name}.apk"
         }
     }
 }
