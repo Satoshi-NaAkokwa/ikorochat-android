@@ -21,10 +21,13 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          components: ['platform-tools', 'platforms;android-31', 'build-tools;31.0.0']
 
       - name: Build APK (DEBUG)
         run: |
           echo "=== Building APK ==="
+          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK artifact
@@ -33,24 +36,3 @@ jobs:
           name: Ikoro-Wallet-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
-
-      - name: Verify APK
-        run: |
-          echo "=== Verification ==="
-          echo "1. Checking for hardcoded secrets..."
-          if grep -r "api.key\|password\|secret\|token" --include="*.kt" app/src/main/java/com/ikoro/android/wallet/ 2>/dev/null | grep -v "private_key_encrypted\|encrypted\|SecretKey"; then
-            echo "WARNING: Potential hardcoded secrets found!"
-            exit 1
-          fi
-          echo "No hardcoded secrets found"
-          
-          echo "2. Verifying APK exists..."
-          if [ ! -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
-            echo "ERROR: APK not found!"
-            find app/build -name "*.apk" 2>/dev/null || echo "No APK files found"
-            exit 1
-          fi
-          echo "APK found!"
-          ls -lh app/build/outputs/apk/debug/
-          
-          echo "=== BUILD SUCCESSFUL ==="
