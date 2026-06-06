@@ -1,0 +1,501 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.ikoro.android.wallet"
+4    android:versionCode="100"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="35" />
+10
+11    <!-- Internet permissions for Nostr relay connections -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:6:5-67
+12-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:7:5-79
+13-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:7:22-76
+14
+15    <!-- Bluetooth permissions -->
+16    <uses-permission
+16-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:10:5-95
+17        android:name="android.permission.BLUETOOTH"
+17-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:10:22-65
+18        android:maxSdkVersion="30" />
+18-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:10:66-92
+19    <uses-permission
+19-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:11:5-101
+20        android:name="android.permission.BLUETOOTH_ADMIN"
+20-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:11:22-71
+21        android:maxSdkVersion="30" />
+21-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:11:72-98
+22    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+22-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:12:5-78
+22-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:12:22-75
+23    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+23-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:13:5-76
+23-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:13:22-73
+24    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+24-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:14:5-73
+24-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:14:22-70
+25
+26    <!-- Location permission required for BLE scanning -->
+27    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+27-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:17:5-81
+27-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:17:22-78
+28    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+28-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:18:5-79
+28-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:18:22-76
+29    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+29-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:19:5-85
+29-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:19:22-82
+30
+31    <!-- Notification permissions -->
+32    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+32-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:22:5-77
+32-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:22:22-74
+33    <!-- Signature permission for internal UI shutdown broadcasts -->
+34    <uses-permission android:name="com.ikorochat.android.permission.FORCE_FINISH" />
+34-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:24:5-85
+34-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:24:22-82
+35    <!-- Foreground service and boot permissions for long-running background mesh -->
+36    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+36-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:26:5-77
+36-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:26:22-74
+37    <!-- Connected device foreground service type for BLE operations (API 34+) -->
+38    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+38-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:28:5-94
+38-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:28:22-91
+39    <!-- Data sync foreground service type (required when declaring dataSync) -->
+40    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+40-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:30:5-87
+40-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:30:22-84
+41    <!-- Location foreground service type required for BLE scanning in background -->
+42    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+42-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:32:5-86
+42-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:32:22-83
+43    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+43-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:33:5-81
+43-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:33:22-78
+44
+45    <!-- Microphone for voice notes -->
+46    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+46-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:36:5-71
+46-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:36:22-68
+47    <!-- Camera for QR verification -->
+48    <uses-permission android:name="android.permission.CAMERA" />
+48-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:38:5-65
+48-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:38:22-62
+49
+50    <!-- Storage permissions for file sharing -->
+51    <uses-permission
+51-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:41:5-107
+52        android:name="android.permission.READ_EXTERNAL_STORAGE"
+52-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:41:22-77
+53        android:maxSdkVersion="28" />
+53-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:41:78-104
+54    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+54-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:42:5-76
+54-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:42:22-73
+55    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+55-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:43:5-75
+55-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:43:22-72
+56    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+56-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:44:5-75
+56-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:44:22-72
+57
+58    <!-- Haptic feedback permission -->
+59    <uses-permission android:name="android.permission.VIBRATE" />
+59-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:47:5-66
+59-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:47:22-63
+60
+61    <!-- Battery optimization permission -->
+62    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+62-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:50:5-95
+62-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:50:22-92
+63
+64    <!-- Hardware features -->
+65    <uses-feature
+65-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:53:5-90
+66        android:name="android.hardware.bluetooth_le"
+66-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:53:19-63
+67        android:required="true" />
+67-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:53:64-87
+68    <uses-feature
+68-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:54:5-87
+69        android:name="android.hardware.bluetooth"
+69-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:54:19-60
+70        android:required="true" />
+70-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:54:61-84
+71    <uses-feature
+71-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:55:5-85
+72        android:name="android.hardware.camera"
+72-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:55:19-57
+73        android:required="false" />
+73-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:55:58-82
+74
+75    <permission
+75-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:57:5-59:47
+76        android:name="com.ikorochat.android.permission.FORCE_FINISH"
+76-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:58:9-69
+77        android:protectionLevel="signature" />
+77-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:59:9-44
+78    <permission
+78-->[androidx.core:core:1.16.0] /root/.gradle/caches/8.13/transforms/5ffdd989fff1e95af35ce43ea02047e7/transformed/core-1.16.0/AndroidManifest.xml:22:5-24:47
+79        android:name="com.ikoro.android.wallet.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+79-->[androidx.core:core:1.16.0] /root/.gradle/caches/8.13/transforms/5ffdd989fff1e95af35ce43ea02047e7/transformed/core-1.16.0/AndroidManifest.xml:23:9-81
+80        android:protectionLevel="signature" />
+80-->[androidx.core:core:1.16.0] /root/.gradle/caches/8.13/transforms/5ffdd989fff1e95af35ce43ea02047e7/transformed/core-1.16.0/AndroidManifest.xml:24:9-44
+81
+82    <uses-permission android:name="com.ikoro.android.wallet.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+82-->[androidx.core:core:1.16.0] /root/.gradle/caches/8.13/transforms/5ffdd989fff1e95af35ce43ea02047e7/transformed/core-1.16.0/AndroidManifest.xml:26:5-97
+82-->[androidx.core:core:1.16.0] /root/.gradle/caches/8.13/transforms/5ffdd989fff1e95af35ce43ea02047e7/transformed/core-1.16.0/AndroidManifest.xml:26:22-94
+83
+84    <application
+84-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:61:5-147:19
+85        android:name="com.ikoro.android.IkoroApplication"
+85-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:62:9-41
+86        android:allowBackup="false"
+86-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:63:9-36
+87        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+87-->[androidx.core:core:1.16.0] /root/.gradle/caches/8.13/transforms/5ffdd989fff1e95af35ce43ea02047e7/transformed/core-1.16.0/AndroidManifest.xml:28:18-86
+88        android:dataExtractionRules="@xml/data_extraction_rules"
+88-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:64:9-65
+89        android:debuggable="true"
+90        android:extractNativeLibs="false"
+91        android:fullBackupContent="@xml/backup_rules"
+91-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:65:9-54
+92        android:icon="@mipmap/ic_launcher"
+92-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:66:9-43
+93        android:label="@string/app_name"
+93-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:68:9-41
+94        android:roundIcon="@mipmap/ic_launcher_round"
+94-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:67:9-54
+95        android:supportsRtl="true"
+95-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:69:9-35
+96        android:theme="@style/Theme.IkoroAndroid" >
+96-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:70:9-50
+97
+98        <!-- FileProvider for sharing temp/cache files with external viewers -->
+99        <provider
+100            android:name="androidx.core.content.FileProvider"
+100-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:74:13-62
+101            android:authorities="com.ikoro.android.wallet.fileprovider"
+101-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:75:13-64
+102            android:exported="false"
+102-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:76:13-37
+103            android:grantUriPermissions="true" >
+103-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:77:13-47
+104            <meta-data
+104-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:78:13-80:54
+105                android:name="android.support.FILE_PROVIDER_PATHS"
+105-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:79:17-67
+106                android:resource="@xml/file_paths" />
+106-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:80:17-51
+107        </provider>
+108
+109        <activity
+109-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:82:9-86:58
+110            android:name="com.ikoro.android.ui.GeohashPickerActivity"
+110-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:83:13-53
+111            android:exported="false"
+111-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:84:13-37
+112            android:theme="@style/Theme.IkoroAndroid"
+112-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:85:13-54
+113            android:windowSoftInputMode="adjustResize" />
+113-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:86:13-55
+114        <activity
+114-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:87:9-104:20
+115            android:name="com.ikoro.android.MainActivity"
+115-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:88:13-41
+116            android:exported="true"
+116-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:89:13-36
+117            android:label="@string/app_name"
+117-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:90:13-45
+118            android:launchMode="singleTop"
+118-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:93:13-43
+119            android:theme="@style/Theme.IkoroAndroid"
+119-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:91:13-54
+120            android:windowSoftInputMode="adjustResize" >
+120-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:92:13-55
+121            <intent-filter>
+121-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:94:13-97:29
+122                <action android:name="android.intent.action.MAIN" />
+122-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:95:17-69
+122-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:95:25-66
+123
+124                <category android:name="android.intent.category.LAUNCHER" />
+124-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:96:17-77
+124-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:96:27-74
+125            </intent-filter>
+126            <intent-filter>
+126-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:98:13-103:29
+127                <action android:name="android.intent.action.VIEW" />
+127-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:99:17-69
+127-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:99:25-66
+128
+129                <category android:name="android.intent.category.DEFAULT" />
+129-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:100:17-76
+129-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:100:27-73
+130                <category android:name="android.intent.category.BROWSABLE" />
+130-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:101:17-78
+130-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:101:27-75
+131
+132                <data
+132-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:102:17-70
+133                    android:host="verify"
+133-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:102:46-67
+134                    android:scheme="ikoro" />
+134-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:102:23-45
+135            </intent-filter>
+136        </activity>
+137
+138        <!-- OpenClaw Pairing Activity -->
+139        <activity
+139-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:107:9-111:57
+140            android:name="com.ikoro.android.features.openclaw.OpenClawPairingActivity"
+140-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:108:13-70
+141            android:exported="false"
+141-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:109:13-37
+142            android:label="OpenClaw Pairing"
+142-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:110:13-45
+143            android:theme="@style/Theme.IkoroAndroid" />
+143-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:111:13-54
+144
+145        <!-- OpenClaw Service for AI-human secure collaboration -->
+146        <service
+146-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:114:9-117:40
+147            android:name="com.ikoro.android.features.openclaw.OpenClawService"
+147-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:115:13-62
+148            android:enabled="true"
+148-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:116:13-35
+149            android:exported="false" />
+149-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:117:13-37
+150
+151        <!-- Persistent foreground service to run the mesh in background -->
+152        <service
+152-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:120:9-125:19
+153            android:name="com.ikoro.android.service.MeshForegroundService"
+153-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:121:13-58
+154            android:exported="false"
+154-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:122:13-37
+155            android:foregroundServiceType="connectedDevice|dataSync|location" >
+155-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:123:13-78
+156        </service>
+157
+158        <!-- Listen for in-app broadcast when POST_NOTIFICATIONS is granted -->
+159        <receiver
+159-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:128:9-135:20
+160            android:name="com.ikoro.android.service.NotificationPermissionChangedReceiver"
+160-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:129:13-74
+161            android:enabled="true"
+161-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:130:13-35
+162            android:exported="false" >
+162-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:131:13-37
+163            <intent-filter>
+163-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:132:13-134:29
+164                <action android:name="com.ikorochat.android.action.NOTIFICATION_PERMISSION_GRANTED" />
+164-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:133:17-103
+164-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:133:25-100
+165            </intent-filter>
+166        </receiver>
+167
+168        <!-- Auto-start mesh service after boot if enabled -->
+169        <receiver
+169-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:138:9-146:20
+170            android:name="com.ikoro.android.service.BootCompletedReceiver"
+170-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:139:13-58
+171            android:enabled="true"
+171-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:140:13-35
+172            android:exported="false" >
+172-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:141:13-37
+173            <intent-filter>
+173-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:142:13-145:29
+174                <action android:name="android.intent.action.BOOT_COMPLETED" />
+174-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:143:17-79
+174-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:143:25-76
+175                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+175-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:144:17-86
+175-->/root/ikorochat-android/app/src/main/AndroidManifest.xml:144:25-83
+176            </intent-filter>
+177        </receiver>
+178
+179        <service
+179-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1] /root/.gradle/caches/8.13/transforms/bae39ab6ac05e3780a44e9cddde90c30/transformed/jetified-play-services-mlkit-barcode-scanning-18.3.1/AndroidManifest.xml:9:9-15:19
+180            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+180-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1] /root/.gradle/caches/8.13/transforms/bae39ab6ac05e3780a44e9cddde90c30/transformed/jetified-play-services-mlkit-barcode-scanning-18.3.1/AndroidManifest.xml:10:13-91
+181            android:directBootAware="true"
+181-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:17:13-43
+182            android:exported="false" >
+182-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1] /root/.gradle/caches/8.13/transforms/bae39ab6ac05e3780a44e9cddde90c30/transformed/jetified-play-services-mlkit-barcode-scanning-18.3.1/AndroidManifest.xml:11:13-37
+183            <meta-data
+183-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1] /root/.gradle/caches/8.13/transforms/bae39ab6ac05e3780a44e9cddde90c30/transformed/jetified-play-services-mlkit-barcode-scanning-18.3.1/AndroidManifest.xml:12:13-14:85
+184                android:name="com.google.firebase.components:com.google.mlkit.vision.barcode.internal.BarcodeRegistrar"
+184-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1] /root/.gradle/caches/8.13/transforms/bae39ab6ac05e3780a44e9cddde90c30/transformed/jetified-play-services-mlkit-barcode-scanning-18.3.1/AndroidManifest.xml:13:17-120
+185                android:value="com.google.firebase.components.ComponentRegistrar" />
+185-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1] /root/.gradle/caches/8.13/transforms/bae39ab6ac05e3780a44e9cddde90c30/transformed/jetified-play-services-mlkit-barcode-scanning-18.3.1/AndroidManifest.xml:14:17-82
+186            <meta-data
+186-->[com.google.mlkit:vision-common:17.3.0] /root/.gradle/caches/8.13/transforms/eb4d99f311ef78f015e8d9d463a7d129/transformed/jetified-vision-common-17.3.0/AndroidManifest.xml:12:13-14:85
+187                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+187-->[com.google.mlkit:vision-common:17.3.0] /root/.gradle/caches/8.13/transforms/eb4d99f311ef78f015e8d9d463a7d129/transformed/jetified-vision-common-17.3.0/AndroidManifest.xml:13:17-124
+188                android:value="com.google.firebase.components.ComponentRegistrar" />
+188-->[com.google.mlkit:vision-common:17.3.0] /root/.gradle/caches/8.13/transforms/eb4d99f311ef78f015e8d9d463a7d129/transformed/jetified-vision-common-17.3.0/AndroidManifest.xml:14:17-82
+189            <meta-data
+189-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:20:13-22:85
+190                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+190-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:21:17-120
+191                android:value="com.google.firebase.components.ComponentRegistrar" />
+191-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:22:17-82
+192        </service>
+193
+194        <provider
+194-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:9:9-13:38
+195            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+195-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:10:13-78
+196            android:authorities="com.ikoro.android.wallet.mlkitinitprovider"
+196-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:11:13-69
+197            android:exported="false"
+197-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:12:13-37
+198            android:initOrder="99" />
+198-->[com.google.mlkit:common:18.11.0] /root/.gradle/caches/8.13/transforms/e9fc54c0ae662f39a8392cd7a6366b9b/transformed/jetified-common-18.11.0/AndroidManifest.xml:13:13-35
+199
+200        <activity
+200-->[com.google.android.gms:play-services-base:18.5.0] /root/.gradle/caches/8.13/transforms/a48e1d44923d42ad12a6aceee2194356/transformed/jetified-play-services-base-18.5.0/AndroidManifest.xml:5:9-173
+201            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+201-->[com.google.android.gms:play-services-base:18.5.0] /root/.gradle/caches/8.13/transforms/a48e1d44923d42ad12a6aceee2194356/transformed/jetified-play-services-base-18.5.0/AndroidManifest.xml:5:19-85
+202            android:exported="false"
+202-->[com.google.android.gms:play-services-base:18.5.0] /root/.gradle/caches/8.13/transforms/a48e1d44923d42ad12a6aceee2194356/transformed/jetified-play-services-base-18.5.0/AndroidManifest.xml:5:146-170
+203            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+203-->[com.google.android.gms:play-services-base:18.5.0] /root/.gradle/caches/8.13/transforms/a48e1d44923d42ad12a6aceee2194356/transformed/jetified-play-services-base-18.5.0/AndroidManifest.xml:5:86-145
+204
+205        <meta-data
+205-->[com.google.android.gms:play-services-basement:18.4.0] /root/.gradle/caches/8.13/transforms/51f25ea31ed185597a7979d55d3da81f/transformed/jetified-play-services-basement-18.4.0/AndroidManifest.xml:6:9-122
+206            android:name="com.google.android.gms.version"
+206-->[com.google.android.gms:play-services-basement:18.4.0] /root/.gradle/caches/8.13/transforms/51f25ea31ed185597a7979d55d3da81f/transformed/jetified-play-services-basement-18.4.0/AndroidManifest.xml:6:20-65
+207            android:value="@integer/google_play_services_version" />
+207-->[com.google.android.gms:play-services-basement:18.4.0] /root/.gradle/caches/8.13/transforms/51f25ea31ed185597a7979d55d3da81f/transformed/jetified-play-services-basement-18.4.0/AndroidManifest.xml:6:66-119
+208        <!--
+209        Service for holding metadata. Cannot be instantiated.
+210        Metadata will be merged from other manifests.
+211        -->
+212        <service
+212-->[androidx.camera:camera-core:1.5.2] /root/.gradle/caches/8.13/transforms/a26f18835871af448677d35d0dc29b46/transformed/jetified-camera-core-1.5.2/AndroidManifest.xml:29:9-33:78
+213            android:name="androidx.camera.core.impl.MetadataHolderService"
+213-->[androidx.camera:camera-core:1.5.2] /root/.gradle/caches/8.13/transforms/a26f18835871af448677d35d0dc29b46/transformed/jetified-camera-core-1.5.2/AndroidManifest.xml:30:13-75
+214            android:enabled="false"
+214-->[androidx.camera:camera-core:1.5.2] /root/.gradle/caches/8.13/transforms/a26f18835871af448677d35d0dc29b46/transformed/jetified-camera-core-1.5.2/AndroidManifest.xml:31:13-36
+215            android:exported="false" >
+215-->[androidx.camera:camera-core:1.5.2] /root/.gradle/caches/8.13/transforms/a26f18835871af448677d35d0dc29b46/transformed/jetified-camera-core-1.5.2/AndroidManifest.xml:32:13-37
+216            <meta-data
+216-->[androidx.camera:camera-camera2:1.5.2] /root/.gradle/caches/8.13/transforms/4c8aa79736c47c3a3f1832b1590d3f2c/transformed/jetified-camera-camera2-1.5.2/AndroidManifest.xml:30:13-32:89
+217                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+217-->[androidx.camera:camera-camera2:1.5.2] /root/.gradle/caches/8.13/transforms/4c8aa79736c47c3a3f1832b1590d3f2c/transformed/jetified-camera-camera2-1.5.2/AndroidManifest.xml:31:17-103
+218                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+218-->[androidx.camera:camera-camera2:1.5.2] /root/.gradle/caches/8.13/transforms/4c8aa79736c47c3a3f1832b1590d3f2c/transformed/jetified-camera-camera2-1.5.2/AndroidManifest.xml:32:17-86
+219        </service>
+220
+221        <provider
+221-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+222            android:name="androidx.startup.InitializationProvider"
+222-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:25:13-67
+223            android:authorities="com.ikoro.android.wallet.androidx-startup"
+223-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:26:13-68
+224            android:exported="false" >
+224-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:27:13-37
+225            <meta-data
+225-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+226                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+226-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:30:17-75
+227                android:value="androidx.startup" />
+227-->[androidx.emoji2:emoji2:1.3.0] /root/.gradle/caches/8.13/transforms/d788eb755092f6c89c276ac18ba99811/transformed/jetified-emoji2-1.3.0/AndroidManifest.xml:31:17-49
+228            <meta-data
+228-->[androidx.lifecycle:lifecycle-process:2.9.1] /root/.gradle/caches/8.13/transforms/0b19bd49f4e850dfba2284aa96ee94f5/transformed/jetified-lifecycle-process-2.9.1/AndroidManifest.xml:29:13-31:52
+229                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+229-->[androidx.lifecycle:lifecycle-process:2.9.1] /root/.gradle/caches/8.13/transforms/0b19bd49f4e850dfba2284aa96ee94f5/transformed/jetified-lifecycle-process-2.9.1/AndroidManifest.xml:30:17-78
+230                android:value="androidx.startup" />
+230-->[androidx.lifecycle:lifecycle-process:2.9.1] /root/.gradle/caches/8.13/transforms/0b19bd49f4e850dfba2284aa96ee94f5/transformed/jetified-lifecycle-process-2.9.1/AndroidManifest.xml:31:17-49
+231            <meta-data
+231-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+232                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+232-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+233                android:value="androidx.startup" />
+233-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+234        </provider>
+235
+236        <activity
+236-->[androidx.compose.ui:ui-test-manifest:1.7.8] /root/.gradle/caches/8.13/transforms/794d0391b7df2aa3bd2d7df72bea2570/transformed/jetified-ui-test-manifest-1.7.8/AndroidManifest.xml:23:9-25:39
+237            android:name="androidx.activity.ComponentActivity"
+237-->[androidx.compose.ui:ui-test-manifest:1.7.8] /root/.gradle/caches/8.13/transforms/794d0391b7df2aa3bd2d7df72bea2570/transformed/jetified-ui-test-manifest-1.7.8/AndroidManifest.xml:24:13-63
+238            android:exported="true" />
+238-->[androidx.compose.ui:ui-test-manifest:1.7.8] /root/.gradle/caches/8.13/transforms/794d0391b7df2aa3bd2d7df72bea2570/transformed/jetified-ui-test-manifest-1.7.8/AndroidManifest.xml:25:13-36
+239
+240        <receiver
+240-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+241            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+241-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+242            android:directBootAware="false"
+242-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+243            android:enabled="true"
+243-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+244            android:exported="true"
+244-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+245            android:permission="android.permission.DUMP" >
+245-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+246            <intent-filter>
+246-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+247                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+247-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+247-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+248            </intent-filter>
+249            <intent-filter>
+249-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+250                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+250-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+250-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+251            </intent-filter>
+252            <intent-filter>
+252-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+253                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+253-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+253-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+254            </intent-filter>
+255            <intent-filter>
+255-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+256                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+256-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+256-->[androidx.profileinstaller:profileinstaller:1.4.0] /root/.gradle/caches/8.13/transforms/fb23aa5674b471111b392b752929f575/transformed/jetified-profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+257            </intent-filter>
+258        </receiver>
+259
+260        <service
+260-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /root/.gradle/caches/8.13/transforms/9912e13e7ed8acc86d8d9694e19298de/transformed/jetified-transport-backend-cct-2.3.3/AndroidManifest.xml:29:9-35:19
+261            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+261-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /root/.gradle/caches/8.13/transforms/9912e13e7ed8acc86d8d9694e19298de/transformed/jetified-transport-backend-cct-2.3.3/AndroidManifest.xml:30:13-103
+262            android:exported="false" >
+262-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /root/.gradle/caches/8.13/transforms/9912e13e7ed8acc86d8d9694e19298de/transformed/jetified-transport-backend-cct-2.3.3/AndroidManifest.xml:31:13-37
+263            <meta-data
+263-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /root/.gradle/caches/8.13/transforms/9912e13e7ed8acc86d8d9694e19298de/transformed/jetified-transport-backend-cct-2.3.3/AndroidManifest.xml:32:13-34:39
+264                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+264-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /root/.gradle/caches/8.13/transforms/9912e13e7ed8acc86d8d9694e19298de/transformed/jetified-transport-backend-cct-2.3.3/AndroidManifest.xml:33:17-94
+265                android:value="cct" />
+265-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /root/.gradle/caches/8.13/transforms/9912e13e7ed8acc86d8d9694e19298de/transformed/jetified-transport-backend-cct-2.3.3/AndroidManifest.xml:34:17-36
+266        </service>
+267        <service
+267-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:26:9-30:19
+268            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+268-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:27:13-117
+269            android:exported="false"
+269-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:28:13-37
+270            android:permission="android.permission.BIND_JOB_SERVICE" >
+270-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:29:13-69
+271        </service>
+272
+273        <receiver
+273-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:32:9-34:40
+274            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+274-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:33:13-132
+275            android:exported="false" />
+275-->[com.google.android.datatransport:transport-runtime:2.2.6] /root/.gradle/caches/8.13/transforms/f5a90c385c840a7b88b2ee1a7f1e7083/transformed/jetified-transport-runtime-2.2.6/AndroidManifest.xml:34:13-37
+276    </application>
+277
+278</manifest>
