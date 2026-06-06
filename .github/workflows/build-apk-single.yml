@@ -32,20 +32,32 @@ jobs:
 
       - name: Build Debug APK
         run: |
+          set -e
           echo "=== Starting Gradle build ==="
-          echo "Gradle version: $(./gradlew --version)"
-          echo "Android SDK path: $ANDROID_HOME"
-          echo "Available SDK components:"
-          ls -la $ANDROID_HOME
+          echo "Current directory: $(pwd)"
+          echo "Files in current dir:"
+          ls -la
+          echo "Gradle wrapper exists: $(test -f gradlew && echo YES || echo NO)"
+          echo "Gradle wrapper is executable: $(test -x gradlew && echo YES || echo NO)"
           echo "Building APK..."
-          ./gradlew assembleDebug --no-daemon --stacktrace --console=plain
+          ./gradlew assembleDebug --no-daemon --stacktrace --console=plain || (echo "BUILD FAILED" && exit 1)
         timeout-minutes: 30
         env:
           JAVA_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=2g"
-          GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-output
+          path: |
+            app/build/
+            gradle-app.setting
+          retention-days: 1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: Ikoro-Wallet-APK
           path: app/build/outputs/apk/debug/app-debug.apk
