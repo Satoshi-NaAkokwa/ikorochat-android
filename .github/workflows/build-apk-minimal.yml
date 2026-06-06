@@ -24,10 +24,27 @@ jobs:
         with:
           components: 'platform-tools,platforms;android-35,build-tools;35.0.0'
 
+      - name: Debug SDK Setup
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+          ls -la "$ANDROID_HOME" 2>/dev/null || echo "ANDROID_HOME not set"
+          ls -la "$ANDROID_SDK_ROOT" 2>/dev/null || echo "ANDROID_SDK_ROOT not set"
+          echo "Checking for platforms..."
+          ls -la "$ANDROID_HOME/platforms" 2>/dev/null || echo "No platforms directory"
+
       - name: Build APK
         run: |
-          chmod +x gradlew && ./gradlew assembleDebug --no-daemon
-        timeout-minutes: 20
+          chmod +x gradlew && ./gradlew assembleDebug --stacktrace --no-daemon --console=plain 2>&1 | tee /tmp/gradle.log
+        timeout-minutes: 30
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gradle-logs
+          path: /tmp/gradle.log
+          retention-days: 1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
