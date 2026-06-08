@@ -259,7 +259,7 @@ fun SettingSwitchRow(
                 Text(
                     title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = MediaTypeStyle.Medium
+                    fontWeight = FontWeight.Medium
                 )
                 Text(
                     subtitle,
@@ -276,9 +276,3 @@ fun SettingSwitchRow(
     }
 }
 
-// Helper for theme colors if needed
-object MediaTypeStyle {
-    object Medium {
-        operator fun getValue() = FontWeight.Medium
-    }
-}

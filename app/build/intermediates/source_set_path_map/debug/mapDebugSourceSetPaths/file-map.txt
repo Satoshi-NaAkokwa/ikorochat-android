@@ -1,6 +1,0 @@
-com.ikoro.android.app-resValues-0 /root/ikorochat-android/app/build/generated/res/resValues/debug
-com.ikoro.android.app-mergeDebugResources-1 /root/ikorochat-android/app/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
-com.ikoro.android.app-mergeDebugResources-2 /root/ikorochat-android/app/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
-com.ikoro.android.app-debug-3 /root/ikorochat-android/app/build/intermediates/merged_res/debug/mergeDebugResources
-com.ikoro.android.app-debug-4 /root/ikorochat-android/app/src/debug/res
-com.ikoro.android.app-main-5 /root/ikorochat-android/app/src/main/res

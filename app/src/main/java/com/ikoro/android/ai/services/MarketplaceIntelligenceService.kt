@@ -95,11 +95,13 @@ class MarketplaceIntelligenceService(private val context: Context) {
         // Simulated price trend data
         val prices = listOf(0.10, 0.095, 0.09, 0.085, 0.08)
         val trend = prices.last() - prices.first()
+        val startPrice = String.format("%.8f", prices.first())
+        val endPrice = String.format("%.8f", prices.last())
 
         if (trend < 0) {
-            "Price trend: ⬇️ Down ${abs(trend) * 100}% (₿${String.format("%.8f", prices.first()) → ₿${String.format("%.8f", prices.last())})"
+            "Price trend: ⬇️ Down ${abs(trend) * 100}% (₿$startPrice → ₿$endPrice)"
         } else {
-            "Price trend: ⬆️ Up ${trend * 100}% (₿${String.format("%.8f", prices.first()) → ₿${String.format("%.8f", prices.last())})"
+            "Price trend: ⬆️ Up ${trend * 100}% (₿$startPrice → ₿$endPrice)"
         }
     }
 
