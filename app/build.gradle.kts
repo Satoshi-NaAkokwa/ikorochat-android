@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
-    id("org.jetbrains.kotlin.kapt") version "2.2.0"
 }
 android {
     namespace = "com.ikoro.android"
