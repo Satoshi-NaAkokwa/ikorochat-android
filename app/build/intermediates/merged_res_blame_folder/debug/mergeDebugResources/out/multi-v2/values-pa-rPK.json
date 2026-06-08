@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ikoro.android.app-mergeDebugResources-65:/values-pa-rPK/values-pa-rPK.xml",
+            "outputFile": "com.ikoro.android.app-mergeDebugResources-2:/values-pa-rPK/values-pa-rPK.xml",
             "map": [
                 {
                     "source": "/root/ikorochat-android/app/src/main/res/values-pa-rPK/strings.xml",
