@@ -3,9 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.dagger.hilt)
+    id("org.jetbrains.kotlin.kapt") version "2.2.0"
 }
-
 android {
     namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
