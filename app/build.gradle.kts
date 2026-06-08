@@ -40,10 +40,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Only sign release builds if keystore.properties exists
-            if (file("keystore.properties").exists()) {
-                signingConfig = signingConfigs.getByName("release")
-            }
         }
     }
 
@@ -64,4 +60,82 @@ android {
         abortOnError = false
         checkReleaseBuilds = false
     }
+}
+
+dependencies {
+    // AndroidX Core
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    
+    // Compose BOM
+    implementation(platform(libs.androidx.compose.bom))
+    
+    // Compose
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
+    
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    
+    // Activity Compose
+    implementation(libs.androidx.activity.compose)
+    
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    
+    // Accompanist Permissions
+    implementation(libs.accompanist.permissions)
+    
+    // Cryptography
+    implementation(libs.bouncycastle.bcprov)
+    implementation(libs.google.tink.android)
+    
+    // JSON
+    implementation(libs.gson)
+    
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    
+    // Bluetooth
+    implementation(libs.nordic.ble)
+    
+    // WebSocket
+    implementation(libs.okhttp)
+    implementation(libs.tor.android.binary)
+    
+    // Google Play Services
+    implementation(libs.gms.location)
+    
+    // Security
+    implementation(libs.androidx.security.crypto)
+    
+    // QR
+    implementation(libs.zxing.core)
+    
+    // CameraX / ML Kit
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.compose)
+    implementation(libs.mlkit.barcode.scanning)
+    
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.work)
+    
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 }
