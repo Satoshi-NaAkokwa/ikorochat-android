@@ -35,7 +35,9 @@ jobs:
 
       - name: Build APK
         run: |
-          chmod +x gradlew && ./gradlew assembleDebug --stacktrace --no-daemon --console=plain 2>&1 | tee /tmp/gradle.log
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew assembleDebug --stacktrace --no-daemon --console=plain 2>&1 | tee /tmp/gradle.log
         timeout-minutes: 30
 
       - name: Upload Logs

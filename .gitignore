@@ -6,6 +6,10 @@ gradle-appsetting.txt
 local.properties
 
 #
+# Build outputs (all modules)
+**/build/
+
+#
 # Keystore (never commit these!)
 keystore.properties
 release.keystore
