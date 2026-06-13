@@ -98,7 +98,7 @@ fun PINAuthenticationScreen(
 
         // Keypad
         PINKeypad(
-            onDigitPressed = { digit ->
+            onDigit pressed = { digit ->
                 if (pinState.text.length < 6) {
                     pinState = pinState.copy(text = pinState.text + digit)
                 }

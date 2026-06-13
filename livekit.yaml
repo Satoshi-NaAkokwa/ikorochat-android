@@ -1,0 +1,28 @@
+api_key: API_KEY_PLACEHOLDER
+api_secret: API_SECRET_PLACEHOLDER
+
+port: 7880
+
+redis:
+  address: redis:6379
+
+rtc:
+  tcp_port: 7881
+  port_range_start: 50000
+  port_range_end: 60000
+  use_external_ip: false
+
+turn:
+  enabled: true
+  domain: livekit.ikoro.local
+  cert_file: ""
+  key_file: ""
+  udp_port: 3478
+
+webhook:
+  api_key: API_KEY_PLACEHOLDER
+  urls:
+    - "http://host.docker.internal:8080/livekit/webhook"
+
+logging:
+  level: info

@@ -125,7 +125,7 @@ fun RealEstateScreen(modifier: Modifier = Modifier) {
                 "1200 sqm office building for sale",
                 PropertyType.COMMERCIAL, "Victoria Island", 8.0,
                 1200.0, 0, 0, false, true, null,
-                emptyList(), listOf(" elevator", "Generator", "Parking"),
+                emptyList(), listOf(" elevator", "Generator", "Parking"],
                 "S002", "Prime Properties", true, System.currentTimeMillis() - 2592000000
             ),
             RealEstateListing(

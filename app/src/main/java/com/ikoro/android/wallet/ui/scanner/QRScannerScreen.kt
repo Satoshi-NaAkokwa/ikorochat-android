@@ -106,8 +106,8 @@ fun QRScannerScreen(
     }
     
     // Camera implementation
-    var cameraProvider: LiveData<ProcessCameraProvider?> by remember { mutableStateOf(null) }
-    var previewUseCase: LiveData<Preview?> by remember { mutableStateOf(null) }
+    varcameraProvider LiveData<ProcessCameraProvider?> by remember { mutableStateOf(null) }
+    varpreviewUseCase LiveData<Preview?> by remember { mutableStateOf(null) }
     
     CameraProviderListener(
         context = context,

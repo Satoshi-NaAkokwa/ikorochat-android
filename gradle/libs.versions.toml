@@ -13,7 +13,7 @@ activity-compose = "1.10.1"
 appcompat = "1.7.1"
 
 # Compose
-compose-bom = "2024.05.00"
+compose-bom = "2024.06.01"
 
 # Navigation
 navigation-compose = "2.9.1"
@@ -140,9 +140,9 @@ roboelectric = { module = "org.robolectric:roboelectric", version.ref = "roboele
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test"}
 
 # Hilt dependencies
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version = "2.52" }
-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version = "2.52" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-work" }
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hilt-work" }
 
 # Room dependencies

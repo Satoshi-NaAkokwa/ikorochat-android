@@ -311,7 +311,7 @@ fun DJMixerTab(mixes: List<DJMix>) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Import tracks */ },
+                    onClick = { <!-- Import tracks --> },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.LibraryAdd, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -320,7 +320,7 @@ fun DJMixerTab(mixes: List<DJMix>) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Apply effects */ },
+                    onClick = { <!-- Apply effects --> },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -408,7 +408,7 @@ fun VFXStudioTab(projects: List<VFXProject>) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Import video */ },
+                    onClick = { <!-- Import video --> },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.VideoLibrary, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -417,7 +417,7 @@ fun VFXStudioTab(projects: List<VFXProject>) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Add effects */ },
+                    onClick = { <!-- Add effects --> },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.MovieFilter, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -426,7 +426,7 @@ fun VFXStudioTab(projects: List<VFXProject>) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Export */ },
+                    onClick = { <!-- Export --> },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Export, contentDescription = null, modifier = Modifier.size(18.dp))

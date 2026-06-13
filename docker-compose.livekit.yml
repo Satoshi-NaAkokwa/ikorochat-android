@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  livekit:
+    image: livekit/livekit-server:v1.8
+    container_name: livekit-server
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+      - "7882:7882/udp"
+      - "5349:5349"
+      - "5349:5349/udp"
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml:ro
+      - ./livekit-api-key:/livekit-api-key:ro
+    command: --config /etc/livekit.yaml
+    environment:
+      - LIVEKIT_API_KEY=ikoro-dev-key
+      - LIVEKIT_API_SECRET=ikoro-dev-secret-2026
+    restart: unless-stopped
+    networks:
+      - livekit-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: livekit-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - livekit-net
+
+  turn:
+    image: coturn/coturn:alpine
+    container_name: livekit-turn
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+      - "5349:5349"
+      - "5349:5349/udp"
+      - "10000-20000:10000-20000/udp"
+    environment:
+      - REALM=livekit.ikoro.local
+      - MIN_PORT=10000
+      - MAX_PORT=20000
+      - USERNAME=turnuser
+      - PASSWORD=turnpassword
+    command: -n -r livekit.ikoro.local -u turnuser:turnpassword -p 3478 -X 5349 --no-tls --no-dtls --no-stdout-logging
+    restart: unless-stopped
+    networks:
+      - livekit-net
+
+networks:
+  livekit-net:
+    driver: bridge

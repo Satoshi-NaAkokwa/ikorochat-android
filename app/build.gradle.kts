@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     id("org.jetbrains.kotlin.kapt")
 }
+
 android {
     namespace = "com.ikoro.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
