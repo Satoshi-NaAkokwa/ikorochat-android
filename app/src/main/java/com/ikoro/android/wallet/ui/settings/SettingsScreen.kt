@@ -133,11 +133,11 @@ fun SettingsScreen(
             }
         )
         
-        Spacer(modifier = Modifier.height(32_dp))
+        Spacer(modifier = Modifier.height(32.dp))
         
         // About Section
         Divider()
-        Spacer(modifier = Modifier.height(16_dp))
+        Spacer(modifier = Modifier.height(16.dp))
         
         Text(
             text = "About",
@@ -145,7 +145,7 @@ fun SettingsScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
-        Spacer(modifier = Modifier.height(8_dp))
+        Spacer(modifier = Modifier.height(8.dp))
         
         Column {
             Text("Version: 1.0.0", style = MaterialTheme.typography.bodyMedium)
@@ -154,7 +154,7 @@ fun SettingsScreen(
             Text("Target SDK: 35", style = MaterialTheme.typography.bodyMedium)
         }
         
-        Spacer(modifier = Modifier.height(32_dp))
+        Spacer(modifier = Modifier.height(32.dp))
         
         // Save Button
         Button(
@@ -164,7 +164,7 @@ fun SettingsScreen(
             Text("Save Changes")
         }
         
-        Spacer(modifier = Modifier.height(24_dp))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -174,7 +174,7 @@ fun SettingsSectionTitle(title: String) {
         text = title,
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(vertical = 8_dp)
+        modifier = Modifier.padding(vertical = 8.dp)
     )
 }
 
@@ -189,19 +189,19 @@ fun SettingRow(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8_dp)
+            .padding(vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onClick() }
-                .padding(16_dp),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 icon,
                 contentDescription = null,
-                modifier = Modifier.padding(end = 16_dp),
+                modifier = Modifier.padding(end = 16.dp),
                 tint = if (isDestructive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
             )
             
@@ -240,18 +240,18 @@ fun SettingSwitchRow(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8_dp)
+            .padding(vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16_dp),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 icon,
                 contentDescription = null,
-                modifier = Modifier.padding(end = 16_dp),
+                modifier = Modifier.padding(end = 16.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
