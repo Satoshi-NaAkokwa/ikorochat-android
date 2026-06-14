@@ -23,6 +23,7 @@ class NostrClient(
 ) {
 
     companion object {
+        const val KIND_ENCRYPTED_DM = 4
         const val KIND_CALL_OFFER = 30001
         const val KIND_CALL_ANSWER = 30002
         const val KIND_CALL_ICE = 30003
@@ -36,8 +37,7 @@ class NostrClient(
     }
 
     /**
-     * Send an encrypted direct message (kind 4) to a recipient pubkey.
-     * The message is the raw signaling payload (JSON or SDP string).
+     * Send an encrypted direct message (kind 4) to a recipient pubkey using NIP-04.
      */
     suspend fun sendEncryptedDM(recipientPubkeyHex: String, content: String): Result<Unit> {
         val privateKey = identityManager.getNostrPrivateKey()
@@ -45,9 +45,15 @@ class NostrClient(
         val senderPubkey = identityManager.getNostrPublicKeyHex()
             ?: return Result.failure(IllegalStateException("No identity"))
 
+        val encryptedContent = try {
+            NipUtils.encryptNip04(content, privateKey, recipientPubkeyHex)
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
+
         val event = createUnsignedEvent(
-            kind = KIND_CALL_OFFER,
-            content = content,
+            kind = KIND_ENCRYPTED_DM,
+            content = encryptedContent,
             tags = listOf(listOf("p", recipientPubkeyHex)),
             pubkey = senderPubkey
         )
@@ -62,6 +68,10 @@ class NostrClient(
     suspend fun sendCallOffer(recipientPubkeyHex: String, roomId: String): Result<Unit> {
         val payload = """{"type":"call_offer","room":"$roomId","ts":${System.currentTimeMillis()}}"""
         return sendEncryptedDM(recipientPubkeyHex, payload)
+    }
+
+    suspend fun resolveNip05(identifier: String): Result<String> {
+        return NipUtils.resolveNip05(identifier)
     }
 
     private fun createUnsignedEvent(

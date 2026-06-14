@@ -55,6 +55,17 @@ object NostrCrypto {
         return rBytes + sBytes
     }
 
+    /**
+     * Compute shared secret X coordinate for NIP-04 encryption.
+     */
+    fun computeSharedSecretXOnly(privateKey: ByteArray, pubkeyHex: String): ByteArray {
+        val privBig = java.math.BigInteger(1, privateKey)
+        val pubBytes = Hex.decode(pubkeyHex)
+        val pubPoint = domainParams.curve.decodePoint(pubBytes)
+            ?: throw IllegalArgumentException("Invalid public key")
+        val sharedPoint = FixedPointCombMultiplier().multiply(pubPoint, privBig)
+        return sharedPoint.affineXCoord.encoded
+    }
     fun sha256(data: ByteArray): ByteArray {
         val digest = SHA256Digest()
         digest.update(data, 0, data.size)

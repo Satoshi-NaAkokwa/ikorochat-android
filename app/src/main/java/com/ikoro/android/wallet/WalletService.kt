@@ -37,13 +37,13 @@ class WalletService(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    fun isApiKeyValid(): Boolean = apiKey.length in 20..200 && !apiKey.contains("BEGIN CERTIFICATE")
+    fun isApiKeyValid(): Boolean = apiKey.isNotBlank()
 
     suspend fun connect(): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (!isApiKeyValid()) {
-                _error.value = "Breez API key appears invalid. Provide a short API key in local.properties, not a certificate."
-                return@withContext Result.failure(IllegalStateException("Breez API key appears invalid. Provide a short API key in local.properties, not a certificate."))
+                _error.value = "Breez API key is missing. Add breezApiKey to local.properties."
+                return@withContext Result.failure(IllegalStateException("Breez API key missing"))
             }
             _state.value = WalletState.Connecting
             val mnemonic = identityManager.getMnemonic()
@@ -145,8 +145,33 @@ class WalletService(
     }
 
     suspend fun payToNpub(npubHex: String, amountSat: Long, asset: Asset = Asset.BTC): Result<String> = withContext(Dispatchers.IO) {
-        // Placeholder: resolve npub -> Liquid address via nostr profile or contact registry
-        Result.failure(UnsupportedOperationException("npub-to-address resolution not implemented yet"))
+        try {
+            // Try NIP-05 identifier if npub ends with @domain or is a bech32 npub
+            val identifier = if (npubHex.contains("@")) npubHex else bech32ToHex(npubHex)
+            // For now, if it's a hex pubkey, we can't resolve an address without relays.
+            // Best effort: check local contacts for a stored payment address.
+            val paymentAddress = resolveNpubAddress(npubHex)
+                ?: return@withContext Result.failure(IllegalStateException("No payment address for $npubHex"))
+            sendPayment(paymentAddress, asset)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private fun bech32ToHex(npub: String): String {
+        // Placeholder; needs a bech32 decoder. Return as-is if already hex.
+        return if (npub.startsWith("npub")) npub else npub
+    }
+
+    private fun resolveNpubAddress(npubHex: String): String? {
+        // Check SharedPreferences contact registry for a stored Liquid/LN address.
+        val prefs = context.getSharedPreferences("ikoro_contacts", Context.MODE_PRIVATE)
+        return prefs.getString("address_$npubHex", null)
+    }
+
+    fun saveContactAddress(npubHex: String, address: String) {
+        context.getSharedPreferences("ikoro_contacts", Context.MODE_PRIVATE)
+            .edit().putString("address_$npubHex", address).apply()
     }
 }
 

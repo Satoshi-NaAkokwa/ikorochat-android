@@ -69,7 +69,8 @@ class NostrWebSocketClient(
                     val array = JsonParser.parseString(text).asJsonArray
                     if (array.size() >= 2 && array[0].asString == "EVENT") {
                         val eventJson = array[2].asJsonObject
-                        val event = gson.fromJson(eventJson, NostrEvent::class.java)
+                        val rawEvent = gson.fromJson(eventJson, NostrEvent::class.java)
+                        val event = decryptIfNeeded(rawEvent)
                         listeners.forEach { it.onEvent(event) }
                     }
                 } catch (_: Exception) { }
@@ -101,5 +102,16 @@ class NostrWebSocketClient(
         }
         websockets.clear()
         scope.cancel()
+    }
+
+    private fun decryptIfNeeded(event: NostrEvent): NostrEvent {
+        if (event.kind != NostrClient.KIND_ENCRYPTED_DM) return event
+        val priv = identityManager.getNostrPrivateKey() ?: return event
+        return try {
+            val decrypted = NipUtils.decryptNip04(event.content, priv, event.pubkey)
+            event.copy(content = decrypted)
+        } catch (_: Exception) {
+            event
+        }
     }
 }

@@ -12,8 +12,8 @@ android {
         applicationId = "com.ikoro.android"
         minSdk = 26  // API 26 for proper BLE support
         targetSdk = 34
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 5
+        versionName = "0.4.1"
 
         val breezApiKey: String = project.findProperty("breezApiKey") as? String
             ?: project.properties["local.properties.breezApiKey"] as? String
@@ -26,13 +26,24 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("ikoro-release.keystore")
+            storePassword = System.getenv("IKORO_KEYSTORE_PASSWORD") ?: "ikoro123"
+            keyAlias = "ikoro"
+            keyPassword = System.getenv("IKORO_KEY_PASSWORD") ?: "ikoro123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
             ndk {
                 abiFilters += listOf("arm64-v8a", "armeabi-v7a")
             }
@@ -43,6 +54,7 @@ android {
             }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -78,64 +90,64 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    
+
     // AppCompat for theme support
     implementation("androidx.appcompat:appcompat:1.6.1")
-    
+
     // ViewModel and LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.compose.runtime:runtime-livedata")
-    
+
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
-    
+
     // Biometric
     implementation("androidx.biometric:biometric:1.1.0")
-    
+
     // LiveKit SDK for calls
     implementation("io.livekit:livekit-android:2.12.1")
-    
+
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
-    
+
     // Breez SDK - Liquid (BTC + stablecoins)
     implementation("breez_sdk_liquid:bindings-android:0.10.0")
-    
+
     // Cryptography + Bitcoin wallet (includes BIP-39/32)
     implementation("org.bouncycastle:bcprov-jdk15on:1.70")
     implementation("com.google.crypto.tink:tink-android:1.10.0")
     implementation("org.bitcoinj:bitcoinj-core:0.16.2") {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15to18")
     }
-    
+
     // QR generation
     implementation("com.google.zxing:core:3.5.3")
-    
+
     // JSON
     implementation("com.google.code.gson:gson:2.10.1")
-    
+
     // WebSocket / HTTP
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    
+
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    
+
     // Bluetooth
     implementation("no.nordicsemi.android:ble:2.6.1")
-    
+
     // Compression
     implementation("org.lz4:lz4-java:1.8.0")
-    
+
     // Security preferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
-    
+
     // Room for local persistence (no KAPT/Hilt)
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     annotationProcessor("androidx.room:room-compiler:2.5.2")
-    
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
