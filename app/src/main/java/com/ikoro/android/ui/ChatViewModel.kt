@@ -16,6 +16,7 @@ import com.ikoro.android.calls.CallManager
 import com.ikoro.android.calls.LiveKitTokenClient
 import com.ikoro.android.identity.IdentityManager
 import com.ikoro.android.nostr.NostrClient
+import com.ikoro.android.nostr.NostrWebSocketClient
 import com.ikoro.android.mesh.BluetoothMeshDelegate
 import com.ikoro.android.mesh.BluetoothMeshService
 import com.ikoro.android.model.BitchatMessage
@@ -33,6 +34,7 @@ import kotlin.random.Random
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.delay
+import org.json.JSONObject
 
 /**
  * Main ViewModel for bitchat - 100% compatible with iOS ChatViewModel
@@ -47,6 +49,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application), B
     
     val identityManager = IdentityManager(context)
     val nostrClient = NostrClient(identityManager)
+    val nostrWebSocket = NostrWebSocketClient(nostrClient.relayUrls, identityManager)
     val callManager = CallManager(context, identityManager, nostrClient)
     
     private val _callInProgress = MutableLiveData(false)
@@ -64,6 +67,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application), B
             val tokenResponse = result.getOrNull()
             if (tokenResponse != null) {
                 callManager.startAudioCall(peerNpubHex, tokenResponse.serverUrl, tokenResponse.token)
+                nostrClient.sendCallOffer(peerNpubHex, room)
             } else {
                 _callError.value = result.exceptionOrNull()?.message ?: "Failed to get call token"
             }
@@ -80,6 +84,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application), B
             val tokenResponse = result.getOrNull()
             if (tokenResponse != null) {
                 callManager.startVideoCall(peerNpubHex, tokenResponse.serverUrl, tokenResponse.token)
+                nostrClient.sendCallOffer(peerNpubHex, room)
             } else {
                 _callError.value = result.exceptionOrNull()?.message ?: "Failed to get call token"
             }
@@ -165,12 +170,23 @@ class ChatViewModel(application: Application) : AndroidViewModel(application), B
         val description: String
     )
     
+    private val _incomingCallRoom = MutableLiveData<String?>(null)
+    val incomingCallRoom: LiveData<String?> = _incomingCallRoom
+    
+    private val _incomingCallPeer = MutableLiveData<String?>(null)
+    val incomingCallPeer: LiveData<String?> = _incomingCallPeer
+    
     init {
         meshService.delegate = this
         loadNickname()
         loadData()
-        
-        // Start mesh service
+        nostrWebSocket.connect()
+        nostrClient.setWebSocketClient(nostrWebSocket)
+        nostrWebSocket.addListener(object : NostrWebSocketClient.NostrEventListener {
+            override fun onEvent(event: NostrWebSocketClient.NostrEvent) {
+                handleIncomingCallEvent(event)
+            }
+        })
         meshService.startServices()
         
         // Show welcome message if no peers after delay
@@ -199,6 +215,40 @@ class ChatViewModel(application: Application) : AndroidViewModel(application), B
     
     override fun onCleared() {
         super.onCleared()
+        nostrWebSocket.close()
+    }
+    
+    private fun handleIncomingCallEvent(event: NostrWebSocketClient.NostrEvent) {
+        if (event.kind != NostrClient.KIND_CALL_OFFER) return
+        try {
+            val json = JSONObject(event.content)
+            if (json.optString("type") == "call_offer") {
+                val room = json.getString("room")
+                _incomingCallRoom.value = room
+                _incomingCallPeer.value = event.pubkey
+            }
+        } catch (_: Exception) { }
+    }
+    
+    fun acceptIncomingCall(onConnected: (String, String) -> Unit = { _, _ -> }) {
+        val room = _incomingCallRoom.value ?: return
+        val peer = _incomingCallPeer.value ?: return
+        viewModelScope.launch {
+            val identity = identityManager.getNostrPublicKeyHex() ?: UUID.randomUUID().toString()
+            val result = LiveKitTokenClient.fetchToken(room, identity)
+            val tokenResponse = result.getOrNull()
+            if (tokenResponse != null) {
+                callManager.acceptAudioCall(tokenResponse.serverUrl, tokenResponse.token, room)
+                onConnected(peer, room)
+            }
+            _incomingCallRoom.value = null
+            _incomingCallPeer.value = null
+        }
+    }
+    
+    fun rejectIncomingCall() {
+        _incomingCallRoom.value = null
+        _incomingCallPeer.value = null
     }
     
     // MARK: - Nickname Management

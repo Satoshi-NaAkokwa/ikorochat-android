@@ -24,15 +24,22 @@ import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.ikoro.android.IkoroApplication
+import com.ikoro.android.identity.NostrCrypto
+import com.ikoro.android.security.SecureVault
+import com.ikoro.android.wallet.Asset
 import com.ikoro.android.wallet.WalletService
 import com.ikoro.android.wallet.WalletState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import breez_sdk_liquid.Payment
 
 class WalletViewModel(private val walletService: WalletService) : ViewModel() {
     val state: StateFlow<WalletState> = walletService.state
     val balanceSat: StateFlow<Long> = walletService.balanceSat
+    val balanceUsdt: StateFlow<Long> = walletService.balanceUsdt
+    val payments: StateFlow<List<Payment>> = walletService.payments
+    val error: StateFlow<String?> = walletService.error
 
     private val _receiveInvoice = MutableStateFlow("")
     val receiveInvoice: StateFlow<String> = _receiveInvoice
@@ -40,12 +47,14 @@ class WalletViewModel(private val walletService: WalletService) : ViewModel() {
     private val _sendResult = MutableStateFlow("")
     val sendResult: StateFlow<String> = _sendResult
 
-    private val _error = MutableStateFlow("")
-    val error: StateFlow<String> = _error
+    private val _selectedAsset = MutableStateFlow<Asset>(Asset.BTC)
+    val selectedAsset: StateFlow<Asset> = _selectedAsset
+
+    fun setAsset(asset: Asset) { _selectedAsset.value = asset }
 
     fun connect() {
         viewModelScope.launch {
-            walletService.connect().onFailure { _error.value = it.message ?: "Connect failed" }
+            walletService.connect().onFailure { /* error surfaced via error flow */ }
         }
     }
 
@@ -57,15 +66,15 @@ class WalletViewModel(private val walletService: WalletService) : ViewModel() {
 
     fun receive(amountSat: Long?) {
         viewModelScope.launch {
-            walletService.receivePayment(amountSat).onSuccess { _receiveInvoice.value = it }
-                .onFailure { _error.value = it.message ?: "Receive failed" }
+            walletService.receivePayment(amountSat, asset = _selectedAsset.value)
+                .onSuccess { _receiveInvoice.value = it }
         }
     }
 
     fun send(destination: String) {
         viewModelScope.launch {
-            walletService.sendPayment(destination).onSuccess { _sendResult.value = "Sent: $it" }
-                .onFailure { _error.value = it.message ?: "Send failed" }
+            walletService.sendPayment(destination, asset = _selectedAsset.value)
+                .onSuccess { _sendResult.value = "Sent: $it" }
         }
     }
 }
@@ -88,13 +97,20 @@ fun WalletScreen(onBack: () -> Unit = {}) {
     )
     val state by viewModel.state.collectAsState()
     val balance by viewModel.balanceSat.collectAsState()
+    val balanceUsdt by viewModel.balanceUsdt.collectAsState()
     val invoice by viewModel.receiveInvoice.collectAsState()
     val sendResult by viewModel.sendResult.collectAsState()
     val error by viewModel.error.collectAsState()
+    val selectedAsset by viewModel.selectedAsset.collectAsState()
     val clipboard = LocalClipboardManager.current
 
     var sendInput by remember { mutableStateOf("") }
     var receiveAmount by remember { mutableStateOf("") }
+
+    val assetLabel = when (selectedAsset) {
+        Asset.BTC -> "BTC"
+        Asset.LUSDT -> "L-USDT"
+    }
 
     LaunchedEffect(Unit) {
         viewModel.connect()
@@ -106,7 +122,7 @@ fun WalletScreen(onBack: () -> Unit = {}) {
                 title = { Text("Wallet") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -123,6 +139,7 @@ fun WalletScreen(onBack: () -> Unit = {}) {
             Text(
                 text = when (state) {
                     is WalletState.NotInitialized -> "Initializing wallet..."
+                    is WalletState.Connecting -> "Connecting to Breez..."
                     is WalletState.Ready -> "Wallet ready"
                     is WalletState.Error -> "Wallet error"
                 },
@@ -136,6 +153,20 @@ fun WalletScreen(onBack: () -> Unit = {}) {
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
+            Text(
+                text = "L-USDT: $balanceUsdt",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Row {
+                Button(onClick = { viewModel.setAsset(Asset.BTC) }, enabled = selectedAsset != Asset.BTC) {
+                    Text("BTC")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = { viewModel.setAsset(Asset.LUSDT) }, enabled = selectedAsset != Asset.LUSDT) {
+                    Text("L-USDT")
+                }
+            }
 
             Button(onClick = { viewModel.refresh() }) {
                 Text("Refresh Balance")
@@ -144,11 +175,11 @@ fun WalletScreen(onBack: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // Receive section
-            Text("Receive", style = MaterialTheme.typography.titleLarge)
+            Text("Receive $assetLabel", style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 value = receiveAmount,
                 onValueChange = { receiveAmount = it },
-                label = { Text("Amount (sats)") },
+                label = { Text("Amount (${if (selectedAsset == Asset.BTC) "sats" else "units"})") },
                 modifier = Modifier.fillMaxWidth()
             )
             Button(onClick = { viewModel.receive(receiveAmount.toLongOrNull()) }) {
@@ -172,7 +203,7 @@ fun WalletScreen(onBack: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // Send section
-            Text("Send", style = MaterialTheme.typography.titleLarge)
+            Text("Send $assetLabel", style = MaterialTheme.typography.titleLarge)
             OutlinedTextField(
                 value = sendInput,
                 onValueChange = { sendInput = it },
@@ -187,9 +218,9 @@ fun WalletScreen(onBack: () -> Unit = {}) {
                 Text(sendResult, color = MaterialTheme.colorScheme.primary)
             }
 
-            if (error.isNotBlank()) {
+            error?.let {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(error, color = MaterialTheme.colorScheme.error)
+                Text(it, color = MaterialTheme.colorScheme.error)
             }
         }
     }

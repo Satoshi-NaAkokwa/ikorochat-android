@@ -15,21 +15,26 @@ import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ikoro.android.security.AppLockScreen
+import com.ikoro.android.security.FirstTimeLockSetup
+import com.ikoro.android.security.SecureVault
 import com.ikoro.android.ui.ChatScreen
 import com.ikoro.android.ui.ChatViewModel
+import com.ikoro.android.ui.IncomingCallDialog
 import com.ikoro.android.ui.theme.BitchatTheme
 import com.ikoro.android.wallet.ui.WalletScreen
 
 class MainActivity : ComponentActivity() {
-    
+
     private val chatViewModel: ChatViewModel by viewModels()
-    
+
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -38,26 +43,47 @@ class MainActivity : ComponentActivity() {
             finish()
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissions()
-        
+
         setContent {
             BitchatTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    IkoroNavHost(chatViewModel = chatViewModel)
+                    var locked by remember { mutableStateOf(true) }
+                    var needsSetup by remember { mutableStateOf(false) }
+                    val context = LocalContext.current
+
+                    LaunchedEffect(Unit) {
+                        val hasPin = SecureVault.hasPin(context)
+                        needsSetup = !hasPin
+                        locked = hasPin
+                    }
+
+                    when {
+                        needsSetup -> FirstTimeLockSetup(
+                            onDone = {
+                                needsSetup = false
+                                locked = false
+                            }
+                        )
+                        locked -> AppLockScreen(
+                            onUnlocked = { locked = false }
+                        )
+                        else -> IkoroNavHost(chatViewModel = chatViewModel)
+                    }
                 }
             }
         }
     }
-    
+
     private fun requestPermissions() {
         val permissions = mutableListOf<String>()
-        
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             permissions.addAll(listOf(
                 android.Manifest.permission.BLUETOOTH_ADVERTISE,
@@ -70,22 +96,22 @@ class MainActivity : ComponentActivity() {
                 android.Manifest.permission.BLUETOOTH_ADMIN
             ))
         }
-        
+
         permissions.addAll(listOf(
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_FINE_LOCATION
         ))
-        
+
         permissions.addAll(listOf(
             android.Manifest.permission.RECORD_AUDIO,
             android.Manifest.permission.CAMERA,
             android.Manifest.permission.MODIFY_AUDIO_SETTINGS
         ))
-        
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             permissions.add(android.Manifest.permission.POST_NOTIFICATIONS)
         }
-        
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             permissionLauncher.launch(permissions.toTypedArray())
         }
@@ -102,8 +128,22 @@ sealed class Screen(val route: String, val label: String, val icon: androidx.com
 @Composable
 fun IkoroNavHost(chatViewModel: ChatViewModel) {
     val navController = rememberNavController()
-    val context = LocalContext.current
-    
+
+    val incomingRoom by chatViewModel.incomingCallRoom.observeAsState()
+    val incomingPeer by chatViewModel.incomingCallPeer.observeAsState()
+
+    if (incomingRoom != null) {
+        IncomingCallDialog(
+            peer = incomingPeer,
+            onAccept = {
+                chatViewModel.acceptIncomingCall { _, _ ->
+                    navController.navigate(Screen.Calls.route)
+                }
+            },
+            onReject = { chatViewModel.rejectIncomingCall() }
+        )
+    }
+
     Scaffold(
         bottomBar = {
             NavigationBar {

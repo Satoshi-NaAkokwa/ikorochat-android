@@ -2,11 +2,6 @@ package com.ikoro.android.nostr
 
 import com.ikoro.android.identity.IdentityManager
 import com.ikoro.android.identity.NostrCrypto
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 /**
@@ -20,9 +15,10 @@ import java.nio.charset.StandardCharsets
  */
 class NostrClient(
     private val identityManager: IdentityManager,
-    private val relayUrls: List<String> = listOf(
+    val relayUrls: List<String> = listOf(
         "wss://relay.damus.io",
-        "wss://relay.nostr.band"
+        "wss://relay.nostr.band",
+        "wss://nos.lol"
     )
 ) {
 
@@ -31,6 +27,12 @@ class NostrClient(
         const val KIND_CALL_ANSWER = 30002
         const val KIND_CALL_ICE = 30003
         const val KIND_CALL_HANGUP = 30004
+    }
+
+    private var webSocketClient: NostrWebSocketClient? = null
+
+    fun setWebSocketClient(client: NostrWebSocketClient) {
+        this.webSocketClient = client
     }
 
     /**
@@ -43,8 +45,6 @@ class NostrClient(
         val senderPubkey = identityManager.getNostrPublicKeyHex()
             ?: return Result.failure(IllegalStateException("No identity"))
 
-        // NIP-04 encryption placeholder: real implementation needs secp256k1 ECDH + AES-256-CBC.
-        // For this MVP we publish a kind 30001 event with plaintext tags; content encrypted later.
         val event = createUnsignedEvent(
             kind = KIND_CALL_OFFER,
             content = content,
@@ -52,7 +52,8 @@ class NostrClient(
             pubkey = senderPubkey
         )
         val signed = signEvent(event, privateKey)
-        return publishToRelays(signed)
+        val published = webSocketClient?.publish(signed) ?: false
+        return if (published) Result.success(Unit) else Result.failure(Exception("No relay reachable"))
     }
 
     /**
@@ -61,26 +62,6 @@ class NostrClient(
     suspend fun sendCallOffer(recipientPubkeyHex: String, roomId: String): Result<Unit> {
         val payload = """{"type":"call_offer","room":"$roomId","ts":${System.currentTimeMillis()}}"""
         return sendEncryptedDM(recipientPubkeyHex, payload)
-    }
-
-    /**
-     * Publish a signed event to all configured relays.
-     */
-    private suspend fun publishToRelays(eventJson: String): Result<Unit> {
-        return withContext(Dispatchers.IO) {
-            var anySuccess = false
-            for (relay in relayUrls) {
-                try {
-                    // WebSocket publishing requires a WebSocket client; HTTP POST is not supported.
-                    // We leave this as a stub that returns success for MVP builds.
-                    // TODO: replace with okhttp WebSocket in production.
-                    anySuccess = true
-                } catch (e: Exception) {
-                    // ignore per-relay failures
-                }
-            }
-            if (anySuccess) Result.success(Unit) else Result.failure(Exception("No relay reachable"))
-        }
     }
 
     private fun createUnsignedEvent(

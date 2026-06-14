@@ -12,8 +12,13 @@ android {
         applicationId = "com.ikoro.android"
         minSdk = 26  // API 26 for proper BLE support
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.3.0"
+        versionCode = 4
+        versionName = "0.4.0"
+
+        val breezApiKey: String = project.findProperty("breezApiKey") as? String
+            ?: project.properties["local.properties.breezApiKey"] as? String
+            ?: ""
+        buildConfigField("String", "BREEZ_API_KEY", "\"$breezApiKey\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -47,6 +52,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.5"
@@ -85,8 +91,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
     
-    // WebRTC calls via LiveKit
-    implementation("io.livekit:livekit-android:2.12.0")
+    // Biometric
+    implementation("androidx.biometric:biometric:1.1.0")
+    
+    // LiveKit SDK for calls
+    implementation("io.livekit:livekit-android:2.12.1")
     
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
@@ -106,6 +115,9 @@ dependencies {
     
     // JSON
     implementation("com.google.code.gson:gson:2.10.1")
+    
+    // WebSocket / HTTP
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
