@@ -1,119 +1,116 @@
 package com.ikoro.android.wallet
 
 import android.content.Context
-import com.ikoro.android.IkoroApplication
+import breez_sdk_liquid.*
 import com.ikoro.android.identity.IdentityManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
-import org.bitcoinj.core.ECKey
-import org.bitcoinj.core.LegacyAddress
-import org.bitcoinj.core.NetworkParameters
-import org.bitcoinj.core.SegwitAddress
-import org.bitcoinj.core.Transaction
-import org.bitcoinj.core.TransactionConfidence
-import org.bitcoinj.crypto.DeterministicKey
-import org.bitcoinj.params.MainNetParams
-import org.bitcoinj.params.TestNet3Params
-import org.bitcoinj.script.Script
-import org.bitcoinj.wallet.DeterministicKeyChain
-import org.bitcoinj.wallet.DeterministicSeed
-import org.bitcoinj.wallet.KeyChain
-import org.bitcoinj.wallet.KeyChainGroup
+import java.io.File
 
 /**
- * Simple embedded wallet using bitcoinj.
- *
- * Uses the BIP84 account key derived from the Ikoro identity seed.
- * Supports Native SegWit (bech32) addresses.
- *
- * This is a read-only / single-address MVP. It does not sync the chain.
- * Balance and UTXO data must come from a backend or an external wallet service in production.
+ * Breez SDK - Liquid wallet service.
  */
-class WalletService private constructor(context: Context) {
+class WalletService(
+    private val context: Context,
+    private val identityManager: IdentityManager
+) {
+    private var sdk: BindingLiquidSdk? = null
 
-    companion object {
-        @Volatile
-        private var instance: WalletService? = null
+    private val apiKey = """MIIBhjCCATigAwIBAgIHPww+WsFibTAFBgMrZXAwEDEOMAwGA1UEAxMFQnJlZXowHhcNMjYwMzI3MTkwOTA4WhcNMzYwMzI0MTkwOTA4WjA5MRwwGgYDVQQKExNPRk9OT0dVIEFTU0VUUyAgTFREMRkwFwYDVQQDExBDSElORU5ZRSBJQkVNRVJFMCowBQYDK2VwAyEA0IP1y98gPByiIMoph1P0G6cctLb864rNXw1LRLOpXXejgYcwgYQwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFNo5o+5ea0sNMlW/75VgGJCv2AcJMB8GA1UdIwQYMBaAFN6q1pJW843ndJIW/Ey2ILJrKJhrMCQGA1UdEQQdMBuBGWNoaW5lbnllQHd3dy5vZm9uYW9ndS5jb20wBQYDK2VwA0EA0pOOlFYJbylIfMtiSkKk4/RTQgV0z4sSL2SIQliQLVgGKgiifDVgJimKEgL+YCt7ICE+S5SFsfKX3HhT8tsFDg==""".trimIndent()
 
-        fun getInstance(context: Context): WalletService {
-            return instance ?: synchronized(this) {
-                instance ?: WalletService(context.applicationContext).also { instance = it }
-            }
-        }
-    }
+    private val _state = MutableStateFlow<WalletState>(WalletState.NotInitialized)
+    val state: StateFlow<WalletState> = _state
 
-    private val identityManager = IdentityManager(context)
-    private val network = TestNet3Params.get() // Use testnet for MVP safety
+    private val _balanceSat = MutableStateFlow(0L)
+    val balanceSat: StateFlow<Long> = _balanceSat
 
-    private val accountKey: DeterministicKey?
-        get() = identityManager.getBitcoinAccountKey()
+    suspend fun connect(): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val mnemonic = identityManager.getMnemonic()
+                ?: return@withContext Result.failure(IllegalStateException("No mnemonic"))
 
-    /**
-     * Current receive address (Native SegWit / bech32).
-     */
-    fun getReceiveAddress(): String? {
-        val key = accountKey ?: return null
-        return SegwitAddress.fromKey(network, key).toString()
-    }
+            val workingDir = File(context.filesDir, "breez_liquid").apply { mkdirs() }.absolutePath
+            val config: Config = defaultConfig(LiquidNetwork.MAINNET, apiKey)
+            config.workingDir = workingDir
 
-    /**
-     * Get a fresh address at a specific BIP84 index.
-     */
-    fun getAddress(index: Int): String? {
-        val key = accountKey?.let { parent ->
-            org.bitcoinj.crypto.HDKeyDerivation.deriveChildKey(parent, index)
-        } ?: return null
-        return SegwitAddress.fromKey(network, key).toString()
-    }
+            val request = ConnectRequest(config, mnemonic)
+            sdk = connect(request)
 
-    /**
-     * Derive the private key for a given address index.
-     */
-    fun getPrivateKeyForIndex(index: Int): ECKey? {
-        return accountKey?.let { parent ->
-            org.bitcoinj.crypto.HDKeyDerivation.deriveChildKey(parent, index)
-        }
-    }
-
-    /**
-     * Decode a BIP21 / plain address.
-     */
-    fun parseAddress(address: String): Address? {
-        return try {
-            Address.fromString(network, address)
+            _state.value = WalletState.Ready
+            refreshBalance()
+            Result.success(Unit)
         } catch (e: Exception) {
-            null
+            _state.value = WalletState.Error(e.message ?: "Breez connect failed")
+            Result.failure(e)
         }
     }
 
-    /**
-     * Build an unsigned transaction sending [amountSats] to [destinationAddress].
-     * Returns null if we can't build it. In a real implementation this needs UTXOs.
-     */
-    fun buildTransaction(
-        destinationAddress: String,
-        amountSats: Long,
-        feeSats: Long
-    ): Transaction? {
-        val address = parseAddress(destinationAddress) ?: return null
-        val tx = Transaction(network)
-        tx.addOutput(Coin.valueOf(amountSats), address)
-        // TODO: add inputs from UTXO set and sign
-        return tx
+    suspend fun disconnect() = withContext(Dispatchers.IO) {
+        try { sdk?.disconnect() } catch (_: Exception) { }
+        sdk = null
+        _state.value = WalletState.NotInitialized
     }
 
-    /**
-     * Placeholder balance until UTXO sync is wired up.
-     */
-    fun getBalance(): WalletBalance {
-        return WalletBalance(0L, 0L, 0L)
+    suspend fun refreshBalance() = withContext(Dispatchers.IO) {
+        try {
+            val walletInfo = sdk?.getInfo()?.walletInfo
+            _balanceSat.value = walletInfo?.balanceSat?.toLong() ?: 0L
+        } catch (e: Exception) {
+            _state.value = WalletState.Error(e.message ?: "Balance sync failed")
+        }
+    }
+
+    suspend fun receivePayment(
+        payerAmountSat: Long?,
+        description: String = "Ikoro payment"
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val amount = payerAmountSat?.let { ReceiveAmount.Bitcoin(it.toULong()) }
+            val req = PrepareReceiveRequest(
+                paymentMethod = PaymentMethod.BOLT11_INVOICE,
+                amount = amount
+            )
+            val prepareResponse = sdk?.prepareReceivePayment(req)
+                ?: return@withContext Result.failure(IllegalStateException("SDK not connected"))
+            val response = sdk?.receivePayment(
+                ReceivePaymentRequest(
+                    prepareResponse = prepareResponse,
+                    description = description
+                )
+            )
+            Result.success(response?.destination ?: "")
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun sendPayment(destination: String): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val req = PrepareSendRequest(destination = destination)
+            val prepare = sdk?.prepareSendPayment(req)
+                ?: return@withContext Result.failure(IllegalStateException("SDK not connected"))
+            val response = sdk?.sendPayment(SendPaymentRequest(prepareResponse = prepare))
+            Result.success(response?.payment?.txId ?: "pending")
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun listPayments(): Result<List<Payment>> = withContext(Dispatchers.IO) {
+        try {
+            val req = ListPaymentsRequest()
+            val list = sdk?.listPayments(req)
+            Result.success(list ?: emptyList())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
 
-data class WalletBalance(
-    val totalSats: Long,
-    val confirmedSats: Long,
-    val pendingSats: Long
-)
+sealed class WalletState {
+    object NotInitialized : WalletState()
+    object Ready : WalletState()
+    data class Error(val message: String) : WalletState()
+}

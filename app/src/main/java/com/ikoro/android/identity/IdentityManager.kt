@@ -43,6 +43,16 @@ class IdentityManager(private val context: Context) {
     fun hasIdentity(): Boolean = SecureVault.hasSeed(context)
 
     /**
+     * Get the root seed bytes if identity exists.
+     */
+    private fun getSeedBytes(): ByteArray? = SecureVault.retrieveSeed(context)
+
+    /**
+     * Get the BIP-39 mnemonic words if stored.
+     */
+    fun getMnemonic(): String? = SecureVault.retrieveMnemonic(context)
+
+    /**
      * Generate a new identity. Returns the mnemonic words so the user can back them up.
      * The seed bytes are stored encrypted.
      */
@@ -53,6 +63,7 @@ class IdentityManager(private val context: Context) {
         val seed = DeterministicSeed(words, null, "", System.currentTimeMillis()).seedBytes
             ?: throw IllegalStateException("Failed to derive seed")
         SecureVault.storeSeed(context, seed)
+        SecureVault.storeMnemonic(context, words.joinToString(" "))
         return words
     }
 
@@ -65,16 +76,12 @@ class IdentityManager(private val context: Context) {
             val seed = DeterministicSeed(words, null, "", System.currentTimeMillis()).seedBytes
                 ?: throw IllegalStateException("Failed to derive seed")
             SecureVault.storeSeed(context, seed)
+            SecureVault.storeMnemonic(context, words.joinToString(" "))
             Result.success(Unit)
         } catch (e: MnemonicException) {
             Result.failure(e)
         }
     }
-
-    /**
-     * Get the root seed bytes if identity exists.
-     */
-    private fun getSeedBytes(): ByteArray? = SecureVault.retrieveSeed(context)
 
     /**
      * Derive the Nostr private key (32 bytes) from the identity seed.

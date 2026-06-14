@@ -21,6 +21,7 @@ object SecureVault {
 
     private const val PREFS_FILE = "ikoro_vault"
     private const val KEY_SEED = "seed_encrypted"
+    private const val KEY_MNEMONIC = "mnemonic_encrypted"
     private const val KEY_SALT = "seed_salt"
     private const val GCM_TAG_LENGTH = 128
     private const val GCM_IV_LENGTH = 12
@@ -79,6 +80,14 @@ object SecureVault {
 
     fun retrieveSeed(context: Context): ByteArray? {
         return retrieveSecret(context, KEY_SEED)
+    }
+
+    fun storeMnemonic(context: Context, mnemonic: String) {
+        storeSecret(context, KEY_MNEMONIC, mnemonic.toByteArray(Charsets.UTF_8))
+    }
+
+    fun retrieveMnemonic(context: Context): String? {
+        return retrieveSecret(context, KEY_MNEMONIC)?.toString(Charsets.UTF_8)
     }
 
     fun clearAll(context: Context) {

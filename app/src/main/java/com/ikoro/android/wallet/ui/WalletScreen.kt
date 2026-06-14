@@ -1,13 +1,13 @@
 package com.ikoro.android.wallet.ui
 
 import android.graphics.Bitmap
+import android.widget.ImageView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,59 +16,89 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.ikoro.android.IkoroApplication
-import com.ikoro.android.wallet.WalletBalance
 import com.ikoro.android.wallet.WalletService
+import com.ikoro.android.wallet.WalletState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class WalletViewModel(private val walletService: WalletService) : ViewModel() {
-    private val _balance = MutableStateFlow(WalletBalance(0, 0, 0))
-    val balance: StateFlow<WalletBalance> = _balance
+    val state: StateFlow<WalletState> = walletService.state
+    val balanceSat: StateFlow<Long> = walletService.balanceSat
 
-    private val _address = MutableStateFlow("")
-    val address: StateFlow<String> = _address
+    private val _receiveInvoice = MutableStateFlow("")
+    val receiveInvoice: StateFlow<String> = _receiveInvoice
 
     private val _sendResult = MutableStateFlow("")
     val sendResult: StateFlow<String> = _sendResult
 
-    init {
-        refresh()
+    private val _error = MutableStateFlow("")
+    val error: StateFlow<String> = _error
+
+    fun connect() {
+        viewModelScope.launch {
+            walletService.connect().onFailure { _error.value = it.message ?: "Connect failed" }
+        }
     }
 
     fun refresh() {
-        _balance.value = walletService.getBalance()
-        _address.value = walletService.getReceiveAddress() ?: ""
+        viewModelScope.launch {
+            walletService.refreshBalance()
+        }
     }
 
-    fun send(destination: String, amountSats: Long) {
-        // Placeholder: real send needs UTXO + signing
-        _sendResult.value = "Send requested: ${amountSats} sats to $destination\n(UTXO sync not yet wired)"
+    fun receive(amountSat: Long?) {
+        viewModelScope.launch {
+            walletService.receivePayment(amountSat).onSuccess { _receiveInvoice.value = it }
+                .onFailure { _error.value = it.message ?: "Receive failed" }
+        }
+    }
+
+    fun send(destination: String) {
+        viewModelScope.launch {
+            walletService.sendPayment(destination).onSuccess { _sendResult.value = "Sent: $it" }
+                .onFailure { _error.value = it.message ?: "Send failed" }
+        }
+    }
+}
+
+class WalletViewModelFactory(private val context: android.content.Context) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        val app = context.applicationContext as IkoroApplication
+        val service = WalletService(app, app.identityManager)
+        return WalletViewModel(service) as T
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WalletScreen(
-    onBack: () -> Unit,
-    viewModel: WalletViewModel = viewModel(
-        factory = WalletViewModelFactory(LocalContext.current.applicationContext as IkoroApplication)
-    )
-) {
+fun WalletScreen(onBack: () -> Unit = {}) {
     val context = LocalContext.current
-    val clipboard = LocalClipboardManager.current
-    val balance by viewModel.balance.collectAsState()
-    val address by viewModel.address.collectAsState()
+    val viewModel: WalletViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        factory = WalletViewModelFactory(context)
+    )
+    val state by viewModel.state.collectAsState()
+    val balance by viewModel.balanceSat.collectAsState()
+    val invoice by viewModel.receiveInvoice.collectAsState()
     val sendResult by viewModel.sendResult.collectAsState()
-    var destination by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var selectedTab by remember { mutableIntStateOf(0) }
+    val error by viewModel.error.collectAsState()
+    val clipboard = LocalClipboardManager.current
+
+    var sendInput by remember { mutableStateOf("") }
+    var receiveAmount by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        viewModel.connect()
+    }
 
     Scaffold(
         topBar = {
@@ -86,137 +116,95 @@ fun WalletScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TabRow(selectedTabIndex = selectedTab) {
-                Tab(selected = selectedTab == 0, onClick = { selectedTab = 0 }, text = { Text("Balance") })
-                Tab(selected = selectedTab == 1, onClick = { selectedTab = 1 }, text = { Text("Receive") })
-                Tab(selected = selectedTab == 2, onClick = { selectedTab = 2 }, text = { Text("Send") })
-            }
-
-            when (selectedTab) {
-                0 -> BalanceTab(balance)
-                1 -> ReceiveTab(address, clipboard, context)
-                2 -> SendTab(destination, amount, { destination = it }, { amount = it }, sendResult, viewModel)
-            }
-        }
-    }
-}
-
-@Composable
-private fun BalanceTab(balance: WalletBalance) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Total Balance", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("${balance.totalSats} sats", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Confirmed: ${balance.confirmedSats} sats")
-        Text("Pending: ${balance.pendingSats} sats")
-    }
-}
-
-@Composable
-private fun ReceiveTab(address: String, clipboard: androidx.compose.ui.platform.ClipboardManager, context: android.content.Context) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Receive Bitcoin", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        if (address.isNotBlank()) {
-            val qrBitmap = remember(address) { generateQrBitmap(address, 512) }
-            qrBitmap?.let {
-                Image(
-                    bitmap = it.asImageBitmap(),
-                    contentDescription = "QR Code",
-                    modifier = Modifier.size(200.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = address,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
+                text = when (state) {
+                    is WalletState.NotInitialized -> "Initializing wallet..."
+                    is WalletState.Ready -> "Wallet ready"
+                    is WalletState.Error -> "Wallet error"
+                },
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Balance: $balance sats",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Button(onClick = { viewModel.refresh() }) {
+                Text("Refresh Balance")
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Receive section
+            Text("Receive", style = MaterialTheme.typography.titleLarge)
+            OutlinedTextField(
+                value = receiveAmount,
+                onValueChange = { receiveAmount = it },
+                label = { Text("Amount (sats)") },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { clipboard.setText(AnnotatedString(address)) }) {
-                Icon(Icons.Default.Share, contentDescription = null)
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Copy Address")
+            Button(onClick = { viewModel.receive(receiveAmount.toLongOrNull()) }) {
+                Text("Generate Invoice")
             }
-        } else {
-            Text("No wallet available. Create an identity first.")
-        }
-    }
-}
 
-@Composable
-private fun SendTab(
-    destination: String,
-    amount: String,
-    onDestinationChange: (String) -> Unit,
-    onAmountChange: (String) -> Unit,
-    sendResult: String,
-    viewModel: WalletViewModel
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp)
-    ) {
-        OutlinedTextField(
-            value = destination,
-            onValueChange = onDestinationChange,
-            label = { Text("Destination Address") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = amount,
-            onValueChange = onAmountChange,
-            label = { Text("Amount (sats)") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                val amountSats = amount.toLongOrNull() ?: 0L
-                if (destination.isNotBlank() && amountSats > 0) {
-                    viewModel.send(destination, amountSats)
+            if (invoice.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Image(
+                    bitmap = generateQrBitmap(invoice).asImageBitmap(),
+                    contentDescription = "Receive QR",
+                    modifier = Modifier.size(200.dp)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(invoice.take(60) + "...", style = MaterialTheme.typography.bodySmall)
+                Button(onClick = { clipboard.setText(AnnotatedString(invoice)) }) {
+                    Text("Copy Invoice")
                 }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = destination.isNotBlank() && amount.isNotBlank()
-        ) {
-            Text("Send")
-        }
-        if (sendResult.isNotBlank()) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(sendResult, style = MaterialTheme.typography.bodySmall)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Send section
+            Text("Send", style = MaterialTheme.typography.titleLarge)
+            OutlinedTextField(
+                value = sendInput,
+                onValueChange = { sendInput = it },
+                label = { Text("Invoice / Address / LNURL") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(onClick = { viewModel.send(sendInput) }) {
+                Text("Send Payment")
+            }
+
+            if (sendResult.isNotBlank()) {
+                Text(sendResult, color = MaterialTheme.colorScheme.primary)
+            }
+
+            if (error.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(error, color = MaterialTheme.colorScheme.error)
+            }
         }
     }
 }
 
-private fun generateQrBitmap(content: String, size: Int): Bitmap? {
-    return try {
-        val writer = QRCodeWriter()
-        val matrix = writer.encode(content, BarcodeFormat.QR_CODE, size, size)
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
-        for (x in 0 until size) {
-            for (y in 0 until size) {
-                bitmap.setPixel(x, y, if (matrix.get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
-            }
+private fun generateQrBitmap(content: String): Bitmap {
+    val writer = QRCodeWriter()
+    val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
+    val width = bitMatrix.width
+    val height = bitMatrix.height
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+    for (x in 0 until width) {
+        for (y in 0 until height) {
+            bitmap.setPixel(x, y, if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
         }
-        bitmap
-    } catch (e: Exception) {
-        null
     }
+    return bitmap
 }

@@ -28,6 +28,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            ndk {
+                abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+            }
+        }
+        debug {
+            ndk {
+                abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+            }
         }
     }
     compileOptions {
@@ -82,6 +90,9 @@ dependencies {
     
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    
+    // Breez SDK - Liquid (BTC + stablecoins)
+    implementation("breez_sdk_liquid:bindings-android:0.10.0")
     
     // Cryptography + Bitcoin wallet (includes BIP-39/32)
     implementation("org.bouncycastle:bcprov-jdk15on:1.70")
