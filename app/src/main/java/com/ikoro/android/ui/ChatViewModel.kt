@@ -12,6 +12,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.ikoro.android.calls.CallManager
+import com.ikoro.android.calls.LiveKitTokenClient
+import com.ikoro.android.identity.IdentityManager
+import com.ikoro.android.nostr.NostrClient
 import com.ikoro.android.mesh.BluetoothMeshDelegate
 import com.ikoro.android.mesh.BluetoothMeshService
 import com.ikoro.android.model.BitchatMessage
@@ -41,7 +45,47 @@ class ChatViewModel(application: Application) : AndroidViewModel(application), B
     // Core services
     val meshService = BluetoothMeshService(context)
     
-    // Observable state - exactly same as iOS version
+    val identityManager = IdentityManager(context)
+    val nostrClient = NostrClient(identityManager)
+    val callManager = CallManager(context, identityManager, nostrClient)
+    
+    private val _callInProgress = MutableLiveData(false)
+    val callInProgress: LiveData<Boolean> = _callInProgress
+    
+    private val _callError = MutableLiveData<String>()
+    val callError: LiveData<String> = _callError
+    
+    fun startAudioCall(peerNpubHex: String) {
+        viewModelScope.launch {
+            _callInProgress.value = true
+            val identity = identityManager.getNostrPublicKeyHex() ?: UUID.randomUUID().toString()
+            val room = "ikoro-${UUID.randomUUID()}"
+            val result = LiveKitTokenClient.fetchToken(room, identity)
+            val tokenResponse = result.getOrNull()
+            if (tokenResponse != null) {
+                callManager.startAudioCall(peerNpubHex, tokenResponse.serverUrl, tokenResponse.token)
+            } else {
+                _callError.value = result.exceptionOrNull()?.message ?: "Failed to get call token"
+            }
+            _callInProgress.value = false
+        }
+    }
+    
+    fun startVideoCall(peerNpubHex: String) {
+        viewModelScope.launch {
+            _callInProgress.value = true
+            val identity = identityManager.getNostrPublicKeyHex() ?: UUID.randomUUID().toString()
+            val room = "ikoro-${UUID.randomUUID()}"
+            val result = LiveKitTokenClient.fetchToken(room, identity)
+            val tokenResponse = result.getOrNull()
+            if (tokenResponse != null) {
+                callManager.startVideoCall(peerNpubHex, tokenResponse.serverUrl, tokenResponse.token)
+            } else {
+                _callError.value = result.exceptionOrNull()?.message ?: "Failed to get call token"
+            }
+            _callInProgress.value = false
+        }
+    }
     private val _messages = MutableLiveData<List<BitchatMessage>>(emptyList())
     val messages: LiveData<List<BitchatMessage>> = _messages
     

@@ -12,8 +12,8 @@ android {
         applicationId = "com.ikoro.android"
         minSdk = 26  // API 26 for proper BLE support
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "0.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

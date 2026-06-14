@@ -57,7 +57,10 @@ import androidx.compose.foundation.clickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(viewModel: ChatViewModel) {
+fun ChatScreen(
+    viewModel: ChatViewModel,
+    onNavigateToCalls: () -> Unit = {}
+) {
     val colorScheme = MaterialTheme.colorScheme
     val messages by viewModel.messages.observeAsState(emptyList())
     val connectedPeers by viewModel.connectedPeers.observeAsState(emptyList())
@@ -210,6 +213,38 @@ fun ChatScreen(viewModel: ChatViewModel) {
                                     }
                                     
                                     Spacer(modifier = Modifier.weight(1f))
+                                    
+                                    // Audio call button
+                                    IconButton(
+                                        onClick = { 
+                                            selectedPrivatePeer?.let { peer ->
+                                                viewModel.startAudioCall(peer)
+                                                onNavigateToCalls()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Call,
+                                            contentDescription = "Audio call",
+                                            tint = colorScheme.primary
+                                        )
+                                    }
+                                    
+                                    // Video call button
+                                    IconButton(
+                                        onClick = { 
+                                            selectedPrivatePeer?.let { peer ->
+                                                viewModel.startVideoCall(peer)
+                                                onNavigateToCalls()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.VideoCall,
+                                            contentDescription = "Video call",
+                                            tint = colorScheme.primary
+                                        )
+                                    }
                                     
                                     // Favorite button
                                     IconButton(

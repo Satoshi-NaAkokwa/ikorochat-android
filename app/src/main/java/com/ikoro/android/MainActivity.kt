@@ -76,6 +76,12 @@ class MainActivity : ComponentActivity() {
             android.Manifest.permission.ACCESS_FINE_LOCATION
         ))
         
+        permissions.addAll(listOf(
+            android.Manifest.permission.RECORD_AUDIO,
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+        ))
+        
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             permissions.add(android.Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -120,7 +126,10 @@ fun IkoroNavHost(chatViewModel: ChatViewModel) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Chat.route) {
-                ChatScreen(viewModel = chatViewModel)
+                ChatScreen(
+                    viewModel = chatViewModel,
+                    onNavigateToCalls = { navController.navigate(Screen.Calls.route) }
+                )
             }
             composable(Screen.Contacts.route) {
                 // Placeholder contacts screen
@@ -132,10 +141,7 @@ fun IkoroNavHost(chatViewModel: ChatViewModel) {
                 WalletScreen(onBack = { navController.navigate(Screen.Chat.route) })
             }
             composable(Screen.Calls.route) {
-                val app = LocalContext.current.applicationContext as com.ikoro.android.IkoroApplication
-                val nostrClient = remember { com.ikoro.android.nostr.NostrClient(app.identityManager) }
-                val callManager = remember { com.ikoro.android.calls.CallManager(app, app.identityManager, nostrClient) }
-                com.ikoro.android.calls.ui.CallScreen(callManager = callManager)
+                com.ikoro.android.calls.ui.CallScreen(callManager = chatViewModel.callManager)
             }
         }
     }
