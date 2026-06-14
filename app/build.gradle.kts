@@ -12,8 +12,8 @@ android {
         applicationId = "com.ikoro.android"
         minSdk = 26  // API 26 for proper BLE support
         targetSdk = 34
-        versionCode = 6
-        versionName = "0.4.2"
+        versionCode = 7
+        versionName = "0.4.3"
 
         val breezApiKey: String = project.findProperty("breezApiKey") as? String
             ?: project.properties["local.properties.breezApiKey"] as? String

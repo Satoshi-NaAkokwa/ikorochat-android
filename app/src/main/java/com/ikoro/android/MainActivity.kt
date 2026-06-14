@@ -1,6 +1,7 @@
 package com.ikoro.android
 
 import android.os.Bundle
+import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,43 +40,75 @@ class MainActivity : ComponentActivity() {
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val allPermissionsGranted = permissions.values.all { it }
-        if (!allPermissionsGranted) {
-            finish()
+        // Do not finish the app if permissions are denied; mark degraded state instead.
+        val denied = permissions.filterValues { !it }.keys.toList()
+        if (denied.isNotEmpty()) {
+            // Persist denied state so the app can show a rationale later.
+            getSharedPreferences("permissions", Context.MODE_PRIVATE)
+                .edit().putStringSet("denied", denied.toSet()).apply()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions()
 
-        setContent {
-            BitchatTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    var locked by remember { mutableStateOf(true) }
-                    var needsSetup by remember { mutableStateOf(false) }
-                    val context = LocalContext.current
+        try {
+            requestPermissions()
 
-                    LaunchedEffect(Unit) {
-                        val hasPin = SecureVault.hasPin(context)
-                        needsSetup = !hasPin
-                        locked = hasPin
-                    }
+            setContent {
+                BitchatTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        var locked by remember { mutableStateOf(true) }
+                        var needsSetup by remember { mutableStateOf(false) }
+                        val context = LocalContext.current
 
-                    when {
-                        needsSetup -> FirstTimeLockSetup(
-                            onDone = {
-                                needsSetup = false
-                                locked = false
+                        LaunchedEffect(Unit) {
+                            val hasPin = try {
+                                SecureVault.hasPin(context)
+                            } catch (_: Exception) {
+                                // If Keystore is unusable on this device, skip lock.
+                                false
                             }
-                        )
-                        locked -> AppLockScreen(
-                            onUnlocked = { locked = false }
-                        )
-                        else -> IkoroNavHost(chatViewModel = chatViewModel)
+                            needsSetup = !hasPin
+                            locked = hasPin
+                        }
+
+                        when {
+                            needsSetup -> FirstTimeLockSetup(
+                                onDone = {
+                                    needsSetup = false
+                                    locked = false
+                                }
+                            )
+                            locked -> AppLockScreen(
+                                onUnlocked = { locked = false }
+                            )
+                            else -> IkoroNavHost(chatViewModel = chatViewModel)
+                        }
+                    }
+                }
+            }
+        } catch (e: Throwable) {
+            // Show a minimal error screen if startup crashes so the app doesn't just disappear.
+            setContent {
+                BitchatTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Ikoro failed to start:\n${e.message}",
+                                modifier = Modifier.padding(24.dp),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
                     }
                 }
             }
