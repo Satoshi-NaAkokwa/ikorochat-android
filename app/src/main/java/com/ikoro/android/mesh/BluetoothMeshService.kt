@@ -1,4 +1,4 @@
-package com.bitchat.android.mesh
+package com.ikoro.android.mesh
 
 import android.Manifest
 import android.bluetooth.*
@@ -8,14 +8,14 @@ import android.content.pm.PackageManager
 import android.os.ParcelUuid
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import com.bitchat.android.crypto.EncryptionService
-import com.bitchat.android.crypto.MessagePadding
-import com.bitchat.android.model.BitchatMessage
-import com.bitchat.android.model.DeliveryAck
-import com.bitchat.android.model.ReadReceipt
-import com.bitchat.android.protocol.BitchatPacket
-import com.bitchat.android.protocol.MessageType
-import com.bitchat.android.protocol.SpecialRecipients
+import com.ikoro.android.crypto.EncryptionService
+import com.ikoro.android.crypto.MessagePadding
+import com.ikoro.android.model.BitchatMessage
+import com.ikoro.android.model.DeliveryAck
+import com.ikoro.android.model.ReadReceipt
+import com.ikoro.android.protocol.BitchatPacket
+import com.ikoro.android.protocol.MessageType
+import com.ikoro.android.protocol.SpecialRecipients
 import kotlinx.coroutines.*
 import java.security.MessageDigest
 import java.util.*

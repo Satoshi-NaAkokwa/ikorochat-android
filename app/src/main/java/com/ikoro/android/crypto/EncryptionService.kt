@@ -1,4 +1,4 @@
-package com.bitchat.android.crypto
+package com.ikoro.android.crypto
 
 import android.content.Context
 import android.content.SharedPreferences

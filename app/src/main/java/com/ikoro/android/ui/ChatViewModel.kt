@@ -1,4 +1,4 @@
-package com.bitchat.android.ui
+package com.ikoro.android.ui
 
 import android.app.Application
 import android.content.Context
@@ -12,12 +12,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.bitchat.android.mesh.BluetoothMeshDelegate
-import com.bitchat.android.mesh.BluetoothMeshService
-import com.bitchat.android.model.BitchatMessage
-import com.bitchat.android.model.DeliveryAck
-import com.bitchat.android.model.DeliveryStatus
-import com.bitchat.android.model.ReadReceipt
+import com.ikoro.android.mesh.BluetoothMeshDelegate
+import com.ikoro.android.mesh.BluetoothMeshService
+import com.ikoro.android.model.BitchatMessage
+import com.ikoro.android.model.DeliveryAck
+import com.ikoro.android.model.DeliveryStatus
+import com.ikoro.android.model.ReadReceipt
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.*

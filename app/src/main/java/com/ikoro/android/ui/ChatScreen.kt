@@ -1,4 +1,4 @@
-package com.bitchat.android.ui
+package com.ikoro.android.ui
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -34,10 +34,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.bitchat.android.R
-import com.bitchat.android.model.BitchatMessage
-import com.bitchat.android.model.DeliveryStatus
-import com.bitchat.android.mesh.BluetoothMeshService
+import com.ikoro.android.R
+import com.ikoro.android.model.BitchatMessage
+import com.ikoro.android.model.DeliveryStatus
+import com.ikoro.android.mesh.BluetoothMeshService
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.foundation.layout.WindowInsets

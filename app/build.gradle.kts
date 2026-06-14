@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.bitchat.android"
+    namespace = "com.ikoro.android"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bitchat.android"
+        applicationId = "com.ikoro.android"
         minSdk = 26  // API 26 for proper BLE support
         targetSdk = 34
         versionCode = 1
@@ -75,13 +75,23 @@ dependencies {
     
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.compose.material:material-icons-extended:1.6.0")
+    
+    // WebRTC calls via LiveKit
+    implementation("io.livekit:livekit-android:2.12.0")
     
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
     
-    // Cryptography
+    // Cryptography + Bitcoin wallet (includes BIP-39/32)
     implementation("org.bouncycastle:bcprov-jdk15on:1.70")
     implementation("com.google.crypto.tink:tink-android:1.10.0")
+    implementation("org.bitcoinj:bitcoinj-core:0.16.2") {
+        exclude(group = "org.bouncycastle", module = "bcprov-jdk15to18")
+    }
+    
+    // QR generation
+    implementation("com.google.zxing:core:3.5.3")
     
     // JSON
     implementation("com.google.code.gson:gson:2.10.1")
@@ -97,6 +107,11 @@ dependencies {
     
     // Security preferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    
+    // Room for local persistence (no KAPT/Hilt)
+    implementation("androidx.room:room-runtime:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+    annotationProcessor("androidx.room:room-compiler:2.5.2")
     
     // Testing
     testImplementation("junit:junit:4.13.2")
